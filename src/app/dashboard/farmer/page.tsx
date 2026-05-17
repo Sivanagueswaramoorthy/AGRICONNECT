@@ -554,22 +554,22 @@ export default function FarmerDashboard() {
       {/* Add Product Modal */}
       {showAddProductModal && (
         <div className={styles.modalOverlay}>
-          <div className={styles.modalCard} style={{ maxWidth: '800px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ margin: 0, fontWeight: 800 }}>{editingProduct ? "Edit Product" : "Product Upload Module"}</h2>
+          <div className={`${styles.modalCard} ${styles.productModalCard}`}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h2 style={{ margin: 0, fontWeight: 800, fontSize: '1.5rem' }}>{editingProduct ? "Edit Product" : "Product Upload Module"}</h2>
               <button onClick={() => setShowAddProductModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={24} color="#64748b" /></button>
             </div>
             
             {/* AI Insight Simulated Box */}
-            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-               <Cpu size={24} color="#2563eb" style={{ flexShrink: 0 }} />
+            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.85rem 1rem', borderRadius: '12px', marginBottom: '1.25rem', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+               <Cpu size={20} color="#2563eb" style={{ flexShrink: 0, marginTop: '2px' }} />
                <div>
-                 <h4 style={{ margin: '0 0 0.5rem 0', color: '#1e3a8a', fontWeight: 800 }}>AI Assistant Insights</h4>
-                 <p style={{ margin: 0, fontSize: '0.9rem', color: '#1e40af' }}><strong>Suggested Pricing:</strong> ₹45/kg (Market average is ₹42-₹48 for similar organic vegetables today). Image Quality Check: <strong>Pass (85%)</strong>.</p>
+                 <h4 style={{ margin: '0 0 0.25rem 0', color: '#1e3a8a', fontWeight: 800, fontSize: '0.95rem' }}>AI Assistant Insights</h4>
+                 <p style={{ margin: 0, fontSize: '0.8rem', color: '#1e40af', lineHeight: 1.4 }}><strong>Suggested Pricing:</strong> ₹45/kg (Market average is ₹42-₹48 for similar organic vegetables today). Image Quality Check: <strong>Pass (85%)</strong>.</p>
                </div>
             </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+ 
+            <div className={styles.modalFieldsGrid}>
               <div className={styles.formGroup}><label>Product Name</label><input type="text" className={styles.formInput} value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} /></div>
               <div className={styles.formGroup}><label>Category</label>
                 <select className={styles.formInput} value={newProduct.category} onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}>
@@ -584,13 +584,13 @@ export default function FarmerDashboard() {
                   <option value="BOTH">Delivery & Pickup</option><option value="DELIVERY">Delivery Only</option><option value="PICKUP">Pickup Only</option>
                 </select>
               </div>
-              <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}><label>Description</label><textarea className={styles.formInput} rows={3} value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} /></div>
+              <div className={styles.formGroup} style={{ gridColumn: '1 / -1', marginBottom: '0.5rem' }}><label>Description</label><textarea className={styles.formInput} rows={2} value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} /></div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '2rem', marginTop: '1rem' }}>
-              <input type="checkbox" id="organic" checked={newProduct.isOrganic === 'true'} onChange={(e) => setNewProduct({...newProduct, isOrganic: e.target.checked ? 'true' : 'false'})} style={{ width: '20px', height: '20px' }}/>
-              <label htmlFor="organic" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Leaf size={18} color="#10b981"/> Verify as Organic</label>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '1.25rem', marginTop: '0.5rem' }}>
+              <input type="checkbox" id="organic" checked={newProduct.isOrganic === 'true'} onChange={(e) => setNewProduct({...newProduct, isOrganic: e.target.checked ? 'true' : 'false'})} style={{ width: '18px', height: '18px' }}/>
+              <label htmlFor="organic" style={{ fontWeight: 700, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}><Leaf size={16} color="#10b981"/> Verify as Organic</label>
             </div>
-            <button className={styles.primaryBtn} onClick={handleAddProduct} disabled={loading}>{loading ? "Saving..." : editingProduct ? "Save Changes" : "Upload Harvest"}</button>
+            <button className={styles.primaryBtn} onClick={handleAddProduct} disabled={loading} style={{ padding: '0.85rem 1.5rem', borderRadius: '14px' }}>{loading ? "Saving..." : editingProduct ? "Save Changes" : "Upload Harvest"}</button>
           </div>
         </div>
       )}

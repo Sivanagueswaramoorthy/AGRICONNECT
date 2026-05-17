@@ -337,27 +337,37 @@
   max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 3rem;
+  padding: 2rem;
   border-radius: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.productModalCard {
+  width: 800px;
+}
+
+.modalFieldsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
 .formGroup {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.15rem;
 }
 
 .formGroup label {
   display: block;
   font-size: 0.85rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: #475569;
 }
 
 .formInput {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1.1rem;
   border-radius: 14px;
   border: 1.5px solid #e2e8f0;
   font-family: inherit;
@@ -586,5 +596,30 @@
   }
   .statValue {
     font-size: 1.75rem !important;
+  }
+
+  /* Modal Card Mobile Responsiveness & Size Reductions */
+  .modalCard {
+    padding: 1.25rem !important;
+    border-radius: 20px !important;
+    max-width: 95vw !important;
+    max-height: 92vh !important;
+  }
+
+  .productModalCard {
+    width: 100% !important;
+  }
+
+  .modalFieldsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .formGroup {
+    margin-bottom: 0.85rem !important;
+  }
+
+  .formInput {
+    padding: 0.65rem 0.85rem !important;
   }
 }
