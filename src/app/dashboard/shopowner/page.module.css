@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Sidebar Overhaul - Professional White Theme */
+.sidebar {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 2.5rem 1.5rem;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+  padding: 0 0.5rem;
+}
+
+.logoIcon {
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 14px;
+  display: flex;
+}
+
+.logoText {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+}
+
+.navItem:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
+.navItem.active {
+  background: #eff6ff;
+  color: #2563eb;
+  box-shadow: none;
+}
+
+/* Main Content */
+.mainContent {
+  flex: 1;
+  padding: 3rem 5rem;
+  max-width: 1600px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5rem;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  padding: 1rem 1.75rem;
+  border-radius: 20px;
+  width: 500px;
+}
+
+.searchBar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-weight: 500;
+}
+
+.profileBadge {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background: #2563eb;
+  color: white;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+/* Marketplace - Clean Grid */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 3rem;
+}
+
+.productCard {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.productCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.1);
+  border-color: #2563eb;
+}
+
+.productImg {
+  height: 240px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.categoryTag {
+  position: absolute;
+  top: 1.75rem;
+  left: 1.75rem;
+  background: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.productInfo {
+  padding: 2.5rem;
+}
+
+.prodHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.prodHeader h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.price {
+  font-weight: 800;
+  color: #2563eb;
+  font-size: 1.35rem;
+}
+
+.farmerDetails {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.negotiateBtn {
+  width: 100%;
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 1.25rem;
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: all 0.3s;
+}
+
+.negotiateBtn:hover {
+  background: #2563eb;
+  transform: scale(1.02);
+}
+
+/* Professional Table */
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+/* Modals */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalCard {
+  background: #ffffff;
+  width: 520px;
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.formGroup {
+  margin-bottom: 2rem;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.formInput {
+  width: 100%;
+  padding: 1.1rem 1.5rem;
+  border-radius: 18px;
+  border: 2px solid #f1f5f9;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.formInput:focus {
+  border-color: #2563eb;
+  outline: none;
+  background: #f8fafc;
+}
+
+.primaryBtn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 1.25rem;
+  border-radius: 18px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.secondaryBtn {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #f1f5f9;
+  padding: 1.25rem;
+  border-radius: 18px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 9999;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

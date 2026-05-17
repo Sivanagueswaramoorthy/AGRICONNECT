@@ -1,0 +1,246 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #fefce8; /* Warm yellow background for delivery */
+  color: #451a03;
+  font-family: 'Outfit', sans-serif;
+}
+
+.sidebar {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #fef3c7;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 2.5rem 1.5rem;
+  z-index: 50;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+.logoIcon {
+  background: #f59e0b;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 14px;
+  display: flex;
+}
+
+.logoText {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.03em;
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: #92400e;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.navLink:hover {
+  background: #fffbeb;
+  color: #f59e0b;
+}
+
+.navLink.active {
+  background: #fff7ed;
+  color: #f59e0b;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 3rem 5rem;
+  max-width: 1400px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+.profileBadge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  background: #f59e0b;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.assignmentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2.5rem;
+}
+
+.routeCard {
+  background: white;
+  border-radius: 40px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+  border: 1px solid #fef3c7;
+}
+
+.routeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.cargoPreview {
+  width: 60px;
+  height: 60px;
+  background: #fffbeb;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.locations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.locItem {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: #fafaf9;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+.locDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.locLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #a8a29e;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.locValue {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.connector {
+  position: absolute;
+  left: 1.6rem;
+  top: 2rem;
+  bottom: 2rem;
+  width: 2px;
+  border-left: 2px dashed #e7e5e4;
+  z-index: 1;
+}
+
+.callBtn {
+  background: white;
+  border: 1px solid #e7e5e4;
+  padding: 0.75rem;
+  border-radius: 14px;
+  color: #f59e0b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.callBtn:hover {
+  background: #f59e0b;
+  color: white;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.primaryBtn {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 1.25rem;
+  border-radius: 20px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.secondaryBtn {
+  background: white;
+  color: #0f172a;
+  border: 2px solid #e2e8f0;
+  padding: 1.25rem;
+  border-radius: 20px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.secondaryBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  background: #f8fafc;
+}
