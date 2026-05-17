@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -25,6 +25,22 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const err = params.get("error");
+      const prefillEmail = params.get("email");
+      const prefillName = params.get("name");
+
+      if (err === "NoUserFound") {
+        setError("No registered account found with this Google account. Choose a role to sign up!");
+        setIsSignUp(true);
+        if (prefillEmail) setEmail(prefillEmail);
+        if (prefillName) setName(prefillName);
+      }
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
