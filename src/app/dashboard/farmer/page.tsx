@@ -6,7 +6,7 @@ import {
   Settings, LogOut, Plus, Search, Bell, Gavel, 
   Check, X, Calendar, User, MapPin, Leaf, Edit2, Trash2, 
   ChevronRight, MoreHorizontal, AlertCircle, RefreshCw, Truck, Camera, Image as ImageIcon,
-  DollarSign, TrendingUp, Activity, Cpu, CloudRain, Sun
+  DollarSign, TrendingUp, Activity, Cpu, CloudRain, Sun, Menu
 } from "lucide-react";
 import styles from "./page.module.css";
 import { getFarmerProducts, addProduct, deleteProduct, updateFarmerProfile, getFarmerProfileByUserId, getCropMonitoring, addCropRecord, getFarmerOrders } from "@/app/actions/farmerActions";
@@ -23,6 +23,12 @@ export default function FarmerDashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState({ totalListings: 0, totalQuantity: 0, earnings: 0, pendingBargains: 0 });
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const switchTab = (tab: string) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
 
   // Modals & UI Feedback
   const [deletePrompt, setDeletePrompt] = useState<string | null>(null);
@@ -189,17 +195,41 @@ export default function FarmerDashboard() {
         </div>
       )}
 
-      <aside className={styles.sidebar}>
-        <div className={styles.logoArea}><div className={styles.logoIcon} style={{ background: '#10b981' }}><Leaf size={24} /></div><span className={styles.logoText}>AgriFarmer</span></div>
+      {/* MOBILE STICKY TOP BAR */}
+      <header className={styles.mobileHeader}>
+        <button className={styles.menuToggle} onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={24} />
+        </button>
+        <div className={styles.mobileLogo}>
+          <div className={styles.mobileLogoIcon} style={{ background: '#10b981' }}><Leaf size={18} /></div>
+          <span>AgriFarmer</span>
+        </div>
+        <div className={styles.mobileAvatar}>F</div>
+      </header>
+
+      {/* MOBILE NAV DRAWER OVERLAY */}
+      {mobileMenuOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.sidebarOpen : ""}`}>
+        <div className={styles.logoArea}>
+          <div className={styles.logoIcon} style={{ background: '#10b981' }}><Leaf size={24} /></div>
+          <span className={styles.logoText}>AgriFarmer</span>
+          <button className={styles.sidebarClose} onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
+        </div>
+        
         <nav className={styles.navMenu}>
-          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => setActiveTab("dashboard")}><LayoutDashboard size={20} /> Dashboard</button>
-          <button className={`${styles.navItem} ${activeTab === "products" ? styles.active : ""}`} onClick={() => setActiveTab("products")}><Package size={20} /> My Products</button>
-          <button className={`${styles.navItem} ${activeTab === "bargains" ? styles.active : ""}`} onClick={() => setActiveTab("bargains")}><Gavel size={20} /> Bargains</button>
-          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => setActiveTab("orders")}><ShoppingCart size={20} /> Orders</button>
-          <button className={`${styles.navItem} ${activeTab === "monitoring" ? styles.active : ""}`} onClick={() => setActiveTab("monitoring")}><CloudRain size={20} /> Crop Monitoring</button>
-          <button className={`${styles.navItem} ${activeTab === "ai" ? styles.active : ""}`} onClick={() => setActiveTab("ai")}><Cpu size={20} /> AI Insights</button>
-          <button className={`${styles.navItem} ${activeTab === "analytics" ? styles.active : ""}`} onClick={() => setActiveTab("analytics")}><BarChart3 size={20} /> Revenue Analytics</button>
-          <button className={`${styles.navItem} ${activeTab === "profile" ? styles.active : ""}`} onClick={() => setActiveTab("profile")}><User size={20} /> Profile</button>
+          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => switchTab("dashboard")}><LayoutDashboard size={20} /> Dashboard</button>
+          <button className={`${styles.navItem} ${activeTab === "products" ? styles.active : ""}`} onClick={() => switchTab("products")}><Package size={20} /> My Products</button>
+          <button className={`${styles.navItem} ${activeTab === "bargains" ? styles.active : ""}`} onClick={() => switchTab("bargains")}><Gavel size={20} /> Bargains</button>
+          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => switchTab("orders")}><ShoppingCart size={20} /> Orders</button>
+          <button className={`${styles.navItem} ${activeTab === "monitoring" ? styles.active : ""}`} onClick={() => switchTab("monitoring")}><CloudRain size={20} /> Crop Monitoring</button>
+          <button className={`${styles.navItem} ${activeTab === "ai" ? styles.active : ""}`} onClick={() => switchTab("ai")}><Cpu size={20} /> AI Insights</button>
+          <button className={`${styles.navItem} ${activeTab === "analytics" ? styles.active : ""}`} onClick={() => switchTab("analytics")}><BarChart3 size={20} /> Revenue Analytics</button>
+          <button className={`${styles.navItem} ${activeTab === "profile" ? styles.active : ""}`} onClick={() => switchTab("profile")}><User size={20} /> Profile</button>
         </nav>
         <div style={{ marginTop: 'auto' }}><button className={styles.navItem} onClick={() => signOut({ callbackUrl: '/login' })} style={{ color: '#ef4444' }}><LogOut size={22} /> Logout</button></div>
       </aside>
@@ -364,31 +394,33 @@ export default function FarmerDashboard() {
              </div>
              <div className={styles.card}>
                {orders.length === 0 ? <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No active orders found.</p> : (
-                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                   <thead style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
-                     <tr>
-                       <th style={{ padding: '1rem', textAlign: 'left' }}>Order ID</th>
-                       <th style={{ padding: '1rem', textAlign: 'left' }}>Buyer</th>
-                       <th style={{ padding: '1rem', textAlign: 'left' }}>Date</th>
-                       <th style={{ padding: '1rem', textAlign: 'left' }}>Amount</th>
-                       <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
-                     </tr>
-                   </thead>
-                   <tbody>
-                     {orders.map((o, i) => (
-                       <tr key={i} style={{ borderBottom: '1px solid #f8fafc' }}>
-                         <td style={{ padding: '1.25rem', fontWeight: 800 }}>#{o.id.substring(0, 8)}</td>
-                         <td style={{ padding: '1.25rem' }}>
-                           <div style={{ fontWeight: 700, color: '#0f172a' }}>{o.user?.name || "Verified Buyer"}</div>
-                           <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{o.user?.email || "N/A"}</div>
-                         </td>
-                         <td style={{ padding: '1.25rem', color: '#64748b' }}>{new Date(o.createdAt).toLocaleDateString()}</td>
-                         <td style={{ padding: '1.25rem', fontWeight: 800, color: '#10b981' }}>₹{o.totalAmount}</td>
-                         <td style={{ padding: '1.25rem' }}><span style={{ padding: '0.4rem 0.8rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, background: o.status === 'DELIVERED' ? '#ecfdf5' : '#eff6ff', color: o.status === 'DELIVERED' ? '#10b981' : '#2563eb' }}>{o.status}</span></td>
+                 <div className={styles.tableWrapper}>
+                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                     <thead style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
+                       <tr>
+                         <th style={{ padding: '1rem', textAlign: 'left' }}>Order ID</th>
+                         <th style={{ padding: '1rem', textAlign: 'left' }}>Buyer</th>
+                         <th style={{ padding: '1rem', textAlign: 'left' }}>Date</th>
+                         <th style={{ padding: '1rem', textAlign: 'left' }}>Amount</th>
+                         <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
                        </tr>
-                     ))}
-                   </tbody>
-                 </table>
+                     </thead>
+                     <tbody>
+                       {orders.map((o, i) => (
+                         <tr key={i} style={{ borderBottom: '1px solid #f8fafc' }}>
+                           <td style={{ padding: '1.25rem', fontWeight: 800 }}>#{o.id.substring(0, 8)}</td>
+                           <td style={{ padding: '1.25rem' }}>
+                             <div style={{ fontWeight: 700, color: '#0f172a' }}>{o.user?.name || "Verified Buyer"}</div>
+                             <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{o.user?.email || "N/A"}</div>
+                           </td>
+                           <td style={{ padding: '1.25rem', color: '#64748b' }}>{new Date(o.createdAt).toLocaleDateString()}</td>
+                           <td style={{ padding: '1.25rem', fontWeight: 800, color: '#10b981' }}>₹{o.totalAmount}</td>
+                           <td style={{ padding: '1.25rem' }}><span style={{ padding: '0.4rem 0.8rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, background: o.status === 'DELIVERED' ? '#ecfdf5' : '#eff6ff', color: o.status === 'DELIVERED' ? '#10b981' : '#2563eb' }}>{o.status}</span></td>
+                         </tr>
+                       ))}
+                     </tbody>
+                   </table>
+                 </div>
                )}
               </div>
            </div>

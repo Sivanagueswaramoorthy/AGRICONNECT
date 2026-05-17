@@ -6,7 +6,7 @@ import {
   Settings, LogOut, Search, Bell, Gavel, 
   Check, X, Calendar, User, MapPin, Truck, Phone,
   TrendingUp, CreditCard, ChevronRight, Info, Heart, Leaf, Tag, Image as ImageIcon,
-  DollarSign, Activity, Star, Filter, List, ArrowUpDown, Clock, Package, Plus, RefreshCw
+  DollarSign, Activity, Star, Filter, List, ArrowUpDown, Clock, Package, Plus, RefreshCw, Menu
 } from "lucide-react";
 import styles from "./page.module.css";
 import { createNegotiation, getNegotiationsForBuyer, confirmCounterOffer, updateBargainPrice } from "@/app/actions/negotiationActions";
@@ -27,6 +27,12 @@ export default function ShopOwnerDashboard() {
   
   const [stats, setStats] = useState({ counterOffers: 0, activeOrders: 0, totalSpent: 0 });
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const switchTab = (tab: string) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
   
   // Modals & UI Feedback
   const [toast, setToast] = useState<{text: string, type: 'success' | 'error'} | null>(null);
@@ -183,19 +189,43 @@ export default function ShopOwnerDashboard() {
         </div>
       )}
 
-      <aside className={styles.sidebar}>
-        <div className={styles.logoArea}><div className={styles.logoIcon}><ShoppingBag size={24} /></div><span className={styles.logoText}>AgriBuyer</span></div>
+      {/* MOBILE STICKY TOP BAR */}
+      <header className={styles.mobileHeader}>
+        <button className={styles.menuToggle} onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={24} />
+        </button>
+        <div className={styles.mobileLogo}>
+          <div className={styles.mobileLogoIcon} style={{ background: '#2563eb' }}><ShoppingBag size={18} /></div>
+          <span>AgriBuyer</span>
+        </div>
+        <div className={styles.mobileAvatar}>B</div>
+      </header>
+
+      {/* MOBILE NAV DRAWER OVERLAY */}
+      {mobileMenuOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.sidebarOpen : ""}`}>
+        <div className={styles.logoArea}>
+          <div className={styles.logoIcon} style={{ background: '#2563eb' }}><ShoppingBag size={24} /></div>
+          <span className={styles.logoText}>AgriBuyer</span>
+          <button className={styles.sidebarClose} onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
+        </div>
+        
         <nav className={styles.navMenu}>
-          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => setActiveTab("dashboard")}><LayoutDashboard size={20} /> Dashboard</button>
-          <button className={`${styles.navItem} ${activeTab === "marketplace" ? styles.active : ""}`} onClick={() => setActiveTab("marketplace")}><Search size={20} /> Marketplace</button>
-          <button className={`${styles.navItem} ${activeTab === "wishlist" ? styles.active : ""}`} onClick={() => setActiveTab("wishlist")}><Heart size={20} /> Wishlist</button>
-          <button className={`${styles.navItem} ${activeTab === "bargains" ? styles.active : ""}`} onClick={() => setActiveTab("bargains")}><Gavel size={20} /> Bargains</button>
-          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => setActiveTab("orders")}><Truck size={20} /> Orders</button>
-          <button className={`${styles.navItem} ${activeTab === "delivery_partners" ? styles.active : ""}`} onClick={() => setActiveTab("delivery_partners")}><Truck size={20} /> Delivery Partners</button>
-          <button className={`${styles.navItem} ${activeTab === "subscriptions" ? styles.active : ""}`} onClick={() => setActiveTab("subscriptions")}><RefreshCw size={20} /> Subscriptions</button>
-          <button className={`${styles.navItem} ${activeTab === "farmers" ? styles.active : ""}`} onClick={() => setActiveTab("farmers")}><MapPin size={20} /> Nearby Farmers</button>
-          <button className={`${styles.navItem} ${activeTab === "reviews" ? styles.active : ""}`} onClick={() => setActiveTab("reviews")}><Star size={20} /> Reviews</button>
-          <button className={`${styles.navItem} ${activeTab === "profile" ? styles.active : ""}`} onClick={() => setActiveTab("profile")}><User size={20} /> Profile</button>
+          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => switchTab("dashboard")}><LayoutDashboard size={20} /> Dashboard</button>
+          <button className={`${styles.navItem} ${activeTab === "marketplace" ? styles.active : ""}`} onClick={() => switchTab("marketplace")}><Search size={20} /> Marketplace</button>
+          <button className={`${styles.navItem} ${activeTab === "wishlist" ? styles.active : ""}`} onClick={() => switchTab("wishlist")}><Heart size={20} /> Wishlist</button>
+          <button className={`${styles.navItem} ${activeTab === "bargains" ? styles.active : ""}`} onClick={() => switchTab("bargains")}><Gavel size={20} /> Bargains</button>
+          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => switchTab("orders")}><Truck size={20} /> Orders</button>
+          <button className={`${styles.navItem} ${activeTab === "delivery_partners" ? styles.active : ""}`} onClick={() => switchTab("delivery_partners")}><Truck size={20} /> Delivery Partners</button>
+          <button className={`${styles.navItem} ${activeTab === "subscriptions" ? styles.active : ""}`} onClick={() => switchTab("subscriptions")}><RefreshCw size={20} /> Subscriptions</button>
+          <button className={`${styles.navItem} ${activeTab === "farmers" ? styles.active : ""}`} onClick={() => switchTab("farmers")}><MapPin size={20} /> Nearby Farmers</button>
+          <button className={`${styles.navItem} ${activeTab === "reviews" ? styles.active : ""}`} onClick={() => switchTab("reviews")}><Star size={20} /> Reviews</button>
+          <button className={`${styles.navItem} ${activeTab === "profile" ? styles.active : ""}`} onClick={() => switchTab("profile")}><User size={20} /> Profile</button>
         </nav>
         <div style={{ marginTop: 'auto' }}><button className={styles.navItem} onClick={() => signOut({ callbackUrl: '/login' })} style={{ color: '#ef4444' }}><LogOut size={22} /> Logout</button></div>
       </aside>
@@ -229,26 +259,28 @@ export default function ShopOwnerDashboard() {
                <div className={styles.card}>
                   <h3 style={{ marginBottom: '1.5rem', fontWeight: 800 }}>Recent Orders</h3>
                   {orders.length === 0 ? <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No active orders found.</p> : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                      <thead style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
-                        <tr>
-                          <th style={{ padding: '1rem', textAlign: 'left' }}>Order ID</th>
-                          <th style={{ padding: '1rem', textAlign: 'left' }}>Date</th>
-                          <th style={{ padding: '1rem', textAlign: 'left' }}>Amount</th>
-                          <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orders.slice(0, 5).map((o, i) => (
-                          <tr key={i} style={{ borderBottom: '1px solid #f8fafc' }}>
-                            <td style={{ padding: '1rem', fontWeight: 800 }}>#{o.id.substring(0, 8)}</td>
-                            <td style={{ padding: '1rem', color: '#64748b' }}>{new Date(o.createdAt).toLocaleDateString()}</td>
-                            <td style={{ padding: '1rem', fontWeight: 800, color: '#10b981' }}>₹{o.totalAmount}</td>
-                            <td style={{ padding: '1rem' }}><span style={{ padding: '0.4rem 0.8rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, background: o.status === 'DELIVERED' ? '#ecfdf5' : '#eff6ff', color: o.status === 'DELIVERED' ? '#10b981' : '#2563eb' }}>{o.status}</span></td>
+                    <div className={styles.tableWrapper}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
+                          <tr>
+                            <th style={{ padding: '1rem', textAlign: 'left' }}>Order ID</th>
+                            <th style={{ padding: '1rem', textAlign: 'left' }}>Date</th>
+                            <th style={{ padding: '1rem', textAlign: 'left' }}>Amount</th>
+                            <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {orders.slice(0, 5).map((o, i) => (
+                            <tr key={i} style={{ borderBottom: '1px solid #f8fafc' }}>
+                              <td style={{ padding: '1rem', fontWeight: 800 }}>#{o.id.substring(0, 8)}</td>
+                              <td style={{ padding: '1rem', color: '#64748b' }}>{new Date(o.createdAt).toLocaleDateString()}</td>
+                              <td style={{ padding: '1rem', fontWeight: 800, color: '#10b981' }}>₹{o.totalAmount}</td>
+                              <td style={{ padding: '1rem' }}><span style={{ padding: '0.4rem 0.8rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, background: o.status === 'DELIVERED' ? '#ecfdf5' : '#eff6ff', color: o.status === 'DELIVERED' ? '#10b981' : '#2563eb' }}>{o.status}</span></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                </div>
 

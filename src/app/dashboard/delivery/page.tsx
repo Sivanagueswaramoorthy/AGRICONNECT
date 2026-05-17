@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { 
   Truck, Package, MapPin, Phone, CheckCircle, 
-  Clock, Navigation, LogOut, User, Activity, Shield, Award, Edit, Save
+  Clock, Navigation, LogOut, User, Activity, Shield, Award, Edit, Save, Menu, X
 } from "lucide-react";
 import styles from "./page.module.css";
 import { 
@@ -18,6 +18,12 @@ export default function DeliveryDashboard() {
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const switchTab = (tab: string) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
 
   // Editable Vehicle Details State
   const [vehicle, setVehicle] = useState({
@@ -99,31 +105,51 @@ export default function DeliveryDashboard() {
         </div>
       )}
 
+      {/* MOBILE STICKY TOP BAR */}
+      <header className={styles.mobileHeader}>
+        <button className={styles.menuToggle} onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={24} />
+        </button>
+        <div className={styles.mobileLogo}>
+          <div className={styles.mobileLogoIcon} style={{ background: '#f59e0b' }}><Truck size={18} /></div>
+          <span>AgriLogistics</span>
+        </div>
+        <div className={styles.mobileAvatar}>D</div>
+      </header>
+
+      {/* MOBILE NAV DRAWER OVERLAY */}
+      {mobileMenuOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setMobileMenuOpen(false)} />
+      )}
+
       {/* SIDEBAR */}
-      <aside className={styles.sidebar}>
+      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.logoArea}>
           <div className={styles.logoIcon}><Truck size={24} /></div>
           <span className={styles.logoText}>AgriLogistics</span>
+          <button className={styles.sidebarClose} onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
         </div>
         
         <nav className={styles.navLinks}>
            <button 
              className={`${styles.navLink} ${activeTab === "active" ? styles.active : ""}`}
-             onClick={() => setActiveTab("active")}
+             onClick={() => switchTab("active")}
            >
              <Navigation size={22} /> Pickup Queue
            </button>
            
            <button 
              className={`${styles.navLink} ${activeTab === "history" ? styles.active : ""}`}
-             onClick={() => setActiveTab("history")}
+             onClick={() => switchTab("history")}
            >
              <Package size={22} /> Order History
            </button>
            
            <button 
              className={`${styles.navLink} ${activeTab === "vehicle" ? styles.active : ""}`}
-             onClick={() => setActiveTab("vehicle")}
+             onClick={() => switchTab("vehicle")}
            >
              <User size={22} /> Vehicle & Profile
            </button>
@@ -166,7 +192,7 @@ export default function DeliveryDashboard() {
           <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             
             {/* STATS OVERVIEW */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+            <div className={styles.statsGrid}>
               <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '24px', border: '1px solid #e2e8f0' }}>
                 <span style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 700 }}>Pending Proposls</span>
                 <div style={{ fontSize: '2rem', fontWeight: 800, marginTop: '0.25rem', color: '#f59e0b' }}>{pendingRequests.length}</div>

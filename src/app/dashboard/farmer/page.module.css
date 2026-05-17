@@ -387,3 +387,181 @@
   from { transform: translateY(100%); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* --- MOBILE RESPONSIVE LAYOUT UPGRADES --- */
+
+.mobileHeader {
+  display: none;
+}
+
+.sidebarOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 140;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.sidebarClose {
+  display: none;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+  border-radius: 12px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .mobileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 130;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .menuToggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #475569;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+
+  .menuToggle:hover {
+    background-color: #f1f5f9;
+  }
+
+  .mobileLogo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mobileLogoIcon {
+    color: white;
+    padding: 0.35rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobileLogo span {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+
+  .mobileAvatar {
+    width: 36px;
+    height: 36px;
+    background: #ecfdf5;
+    color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 1.5px solid #10b981;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -290px;
+    bottom: 0;
+    width: 280px;
+    z-index: 150;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 20px 0 25px -5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+  }
+
+  .sidebarOpen {
+    transform: translateX(290px);
+  }
+
+  .sidebarClose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    margin-left: auto;
+  }
+
+  .sidebarClose:hover {
+    background-color: #f1f5f9;
+  }
+
+  .logoArea {
+    padding: 1.5rem 1.5rem;
+  }
+
+  .navMenu {
+    padding: 1rem 1rem;
+  }
+
+  .mainContent {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .header {
+    display: none; /* Mobile header replaces search header */
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .statItem {
+    padding: 1.5rem;
+  }
+
+  .productGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .productCard {
+    border-radius: 24px;
+  }
+
+  .productInfo {
+    padding: 1.5rem;
+  }
+}
