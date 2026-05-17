@@ -31,12 +31,18 @@ export async function POST(req: Request) {
     // Create user
     const newUser = await prisma.user.create({
       data: {
-        name,
+        name: name || email.split("@")[0],
         email,
         password: hashedPassword,
-        role: role.toUpperCase(), // CUSTOMER or DELIVERY
+        role: role.toUpperCase(), // FARMER, SHOP_OWNER, DELIVERY
       },
     });
+
+    if (role.toUpperCase() === "FARMER") {
+      await prisma.farmerProfile.create({
+        data: { userId: newUser.id }
+      });
+    }
 
     return NextResponse.json(
       { message: "User registered successfully", user: { id: newUser.id, email: newUser.email, role: newUser.role } },

@@ -204,6 +204,41 @@
   text-decoration: underline;
 }
 
+.select {
+  width: 100%;
+  padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+  color: #333;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.selectGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.successMessage {
+  padding: 1rem;
+  border-radius: 12px;
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
 @media (max-width: 480px) {
   .card {
     padding: 1rem;

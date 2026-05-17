@@ -4,21 +4,33 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Lock, User, Mail, ShieldAlert } from "lucide-react";
 import styles from "./page.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
+  
+  // Tab/Screen Mode
+  const [isSignUp, setIsSignUp] = useState(false);
+  
+  // Input fields
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("FARMER"); // FARMER, SHOP_OWNER, DELIVERY
+
+  // UI state
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
 
     if (username === "admin" && password === "admin") {
       router.push("/dashboard/admin");
@@ -38,25 +50,60 @@ export default function LoginPage() {
     const res = await signIn("credentials", {
       username,
       password,
-      portal: "shopowner", // Try shopowner first
       redirect: false,
     });
 
     if (res?.error) {
-      setError("Invalid credentials. Please try again.");
+      setError("Invalid credentials. Please verify your username & password.");
       setLoading(false);
       return;
     }
 
-    if (res?.url) {
-      router.push(res.url);
-      return;
+    // Direct to role-based routing gateway
+    router.push("/dashboard");
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name || email.split("@")[0],
+          email,
+          password,
+          role,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to register account.");
+      }
+
+      setSuccess("Account registered successfully! You can now log in.");
+      
+      // Auto-prefill credentials into login inputs
+      setUsername(email);
+      setPassword(password);
+      
+      // Instantly switch tabs back to login
+      setIsSignUp(false);
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message || "An error occurred during registration.");
+      setLoading(false);
     }
-    router.push("/dashboard/farmer");
   };
 
   const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/dashboard/farmer" });
+    signIn("google", { callbackUrl: "/dashboard" });
   };
 
   return (
@@ -69,46 +116,115 @@ export default function LoginPage() {
         </div>
 
         <h1 className={styles.title}>welcome!</h1>
-        <p className={styles.subtitle}>Login to your account</p>
+        <p className={styles.subtitle}>
+          {isSignUp ? "Create a new account" : "Login to your account"}
+        </p>
 
-        <form onSubmit={handleLogin} className={styles.form}>
-          {error && <div className={styles.errorMessage}>{error}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
+        {success && <div className={styles.successMessage}>{success}</div>}
 
-          <div className={styles.inputGroup}>
-            <User size={18} className={styles.fieldIcon} />
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className={styles.input}
-            />
-          </div>
+        {!isSignUp ? (
+          /* LOGIN FORM */
+          <form onSubmit={handleLogin} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <User size={18} className={styles.fieldIcon} />
+              <input
+                type="text"
+                placeholder="Email or Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
 
-          <div className={styles.inputGroup}>
-            <Lock size={18} className={styles.fieldIcon} />
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className={styles.input}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className={styles.eyeButton}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            <div className={styles.inputGroup}>
+              <Lock size={18} className={styles.fieldIcon} />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.eyeButton}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            <button type="submit" className={styles.signInBtn} disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
             </button>
-          </div>
+          </form>
+        ) : (
+          /* SIGN UP FORM */
+          <form onSubmit={handleSignUp} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <User size={18} className={styles.fieldIcon} />
+              <input
+                type="text"
+                placeholder="Username (e.g. sivanagu)"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
 
-          <button type="submit" className={styles.signInBtn} disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
+            <div className={styles.inputGroup}>
+              <Mail size={18} className={styles.fieldIcon} />
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={styles.input}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <Lock size={18} className={styles.fieldIcon} />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.eyeButton}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            <div className={styles.selectGroup}>
+              <ShieldAlert size={18} className={styles.fieldIcon} />
+              <select 
+                value={role} 
+                onChange={(e) => setRole(e.target.value)}
+                className={styles.select}
+              >
+                <option value="FARMER">Farmer</option>
+                <option value="SHOP_OWNER">Shop Owner</option>
+                <option value="DELIVERY">Delivery Partner</option>
+              </select>
+            </div>
+
+            <button type="submit" className={styles.signInBtn} disabled={loading}>
+              {loading ? "Registering..." : "Create Account"}
+            </button>
+          </form>
+        )}
 
         <div className={styles.divider}>
           <span>Or sign in with</span>
@@ -123,23 +239,34 @@ export default function LoginPage() {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
           </button>
-          <button type="button" className={styles.socialBtn} aria-label="Sign in with Facebook">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </button>
-          <button type="button" className={styles.socialBtn} aria-label="Sign in with Twitter">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M23.953 4.57a10 10 0 002.856-3.51 9.86 9.86 0 01-2.794.797 4.404 4.404 0 001.923-2.428c-.851.524-1.797.863-2.8.989a4.399 4.399 0 00-7.604 4.007 12.5 12.5 0 01-9.087-4.607 4.386 4.386 0 001.364 5.876 4.38 4.38 0 01-1.992-.556v.055a4.404 4.404 0 003.527 4.317 4.40 4.40 0 01-1.988.074 4.408 4.408 0 004.105 3.058A8.82 8.82 0 012 18.539a12.466 12.466 0 006.759 1.984 12.467 12.467 0 0012.452-12.45c0-.19 0-.38-.014-.57A8.91 8.91 0 0023.953 4.57z"/>
-            </svg>
-          </button>
         </div>
 
         <p className={styles.signupText}>
-          Don't have an account?{" "}
-          <a href="/register" className={styles.signupLink}>
-            Sign up here
-          </a>
+          {isSignUp ? (
+            <>
+              Already have an account?{" "}
+              <button 
+                type="button" 
+                onClick={() => { setIsSignUp(false); setError(""); setSuccess(""); }}
+                style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer' }}
+                className={styles.signupLink}
+              >
+                Sign in here
+              </button>
+            </>
+          ) : (
+            <>
+              Don't have an account?{" "}
+              <button 
+                type="button" 
+                onClick={() => { setIsSignUp(true); setError(""); setSuccess(""); }}
+                style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer' }}
+                className={styles.signupLink}
+              >
+                Sign up here
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>
