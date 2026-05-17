@@ -227,7 +227,7 @@ export default function ShopOwnerDashboard() {
           <button className={`${styles.navItem} ${activeTab === "reviews" ? styles.active : ""}`} onClick={() => switchTab("reviews")}><Star size={20} /> Reviews</button>
           <button className={`${styles.navItem} ${activeTab === "profile" ? styles.active : ""}`} onClick={() => switchTab("profile")}><User size={20} /> Profile</button>
         </nav>
-        <div style={{ marginTop: 'auto' }}><button className={styles.navItem} onClick={() => signOut({ callbackUrl: '/login' })} style={{ color: '#ef4444' }}><LogOut size={22} /> Logout</button></div>
+        <div className={styles.logoutArea}><button className={styles.navItem} onClick={() => signOut({ callbackUrl: '/login' })} style={{ color: '#ef4444' }}><LogOut size={22} /> Logout</button></div>
       </aside>
 
       <main className={styles.mainContent}>

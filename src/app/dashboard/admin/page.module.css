@@ -401,6 +401,11 @@
   color: #1e293b;
 }
 
+.logoutArea {
+  margin-top: auto;
+  padding: 1.5rem;
+}
+
 /* RESPONSIVE & MOBILE UX ADAPTATIONS */
 .mobileHeader {
   display: none;
@@ -571,5 +576,23 @@
 
   .chartBarLabel {
     font-size: 0.65rem;
+  }
+
+  .logoutArea {
+    padding-bottom: 5.5rem !important; /* Moves logout button higher on mobile screens */
+  }
+
+  /* Reduced font sizes on mobile viewports */
+  .mainContent h1 {
+    font-size: 1.85rem !important;
+  }
+  .mainContent h2 {
+    font-size: 1.6rem !important;
+  }
+  .mainContent h3 {
+    font-size: 1.25rem !important;
+  }
+  .statValue {
+    font-size: 1.75rem !important;
   }
 }

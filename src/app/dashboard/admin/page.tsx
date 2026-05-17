@@ -212,7 +212,7 @@ export default function AdminDashboard() {
           <button className={`${styles.navItem} ${activeTab === "settings" ? styles.active : ""}`} onClick={() => switchTab("settings")}><Settings size={20} /> Settings</button>
         </nav>
         
-        <div style={{ marginTop: 'auto' }}>
+        <div className={styles.logoutArea}>
           <button className={styles.navItem} onClick={() => signOut({ callbackUrl: '/' })} style={{ color: '#ef4444' }}>
             <LogOut size={20} /> Logout
           </button>

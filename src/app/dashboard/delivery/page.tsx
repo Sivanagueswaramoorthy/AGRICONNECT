@@ -155,7 +155,7 @@ export default function DeliveryDashboard() {
            </button>
         </nav>
         
-        <div style={{ marginTop: 'auto' }}>
+        <div className={styles.logoutArea}>
           <button className={styles.navLink} onClick={() => signOut({ callbackUrl: '/' })} style={{ color: '#ef4444' }}>
             <LogOut size={22} /> Logout
           </button>
