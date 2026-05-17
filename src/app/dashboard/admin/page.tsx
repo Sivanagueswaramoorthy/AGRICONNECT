@@ -6,7 +6,7 @@ import {
   Activity, Search, Filter, ArrowUpRight, ArrowDownRight,
   Leaf, ShoppingBag, MapPin, Calendar, Clock, BarChart2,
   ShieldAlert, Zap, Download, Settings, LogOut, CheckCircle, 
-  AlertTriangle, RefreshCw, XCircle, UserCheck, Shield
+  AlertTriangle, RefreshCw, XCircle, UserCheck, Shield, Menu, X
 } from "lucide-react";
 import styles from "./page.module.css";
 import { signOut } from "next-auth/react";
@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [metrics, setMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Simulated Interactive States for Complaints
   const [complaints, setComplaints] = useState([
@@ -140,6 +141,12 @@ export default function AdminDashboard() {
     triggerToast("Excel-compatible CSV operational report downloaded successfully!");
   };
 
+  // Tab switcher wrapper that auto-closes mobile navigation drawer
+  const switchTab = (tab: string) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+  };
+
   if (loading || !metrics) return (
     <div className={styles.container} style={{ alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center' }}>
@@ -154,36 +161,55 @@ export default function AdminDashboard() {
       {/* TOAST FEEDBACK */}
       {toast && (
         <div style={{
-          position: 'fixed', top: '20px', right: '20px', zIndex: 1000,
+          position: 'fixed', top: '20px', right: '20px', zIndex: 1100,
           background: toast.type === 'success' ? '#6366f1' : '#ef4444',
           color: '#fff', padding: '1rem 2rem', borderRadius: '16px',
-          boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontWeight: 800,
-          animation: 'slide-in 0.3s ease-out'
+          boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontWeight: 800
         }}>
           {toast.text}
         </div>
       )}
 
-      {/* SIDEBAR */}
-      <aside className={styles.sidebar}>
+      {/* MOBILE STICKY TOP BAR */}
+      <header className={styles.mobileHeader}>
+        <button className={styles.menuToggle} onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={24} />
+        </button>
+        <div className={styles.mobileLogo}>
+          <div className={styles.mobileLogoIcon}><Activity size={18} /></div>
+          <span>AgriAdmin</span>
+        </div>
+        <div className={styles.mobileAvatar}>AD</div>
+      </header>
+
+      {/* MOBILE NAV DRAWER OVERLAY */}
+      {mobileMenuOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setMobileMenuOpen(false)} />
+      )}
+
+      {/* SIDEBAR NAVIGATION (Desktop & responsive Mobile Drawer) */}
+      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.logoArea}>
           <div className={styles.logoIcon} style={{ background: '#6366f1' }}><Activity size={24} /></div>
           <span className={styles.logoText}>AgriAdmin</span>
+          <button className={styles.sidebarClose} onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
         </div>
         
         <nav className={styles.navMenu}>
-          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => setActiveTab("dashboard")}><Activity size={20} /> Dashboard</button>
-          <button className={`${styles.navItem} ${activeTab === "users" ? styles.active : ""}`} onClick={() => setActiveTab("users")}><Users size={20} /> Users Registry</button>
-          <button className={`${styles.navItem} ${activeTab === "farmers" ? styles.active : ""}`} onClick={() => setActiveTab("farmers")}><Leaf size={20} /> Farmer Management</button>
-          <button className={`${styles.navItem} ${activeTab === "buyers" ? styles.active : ""}`} onClick={() => setActiveTab("buyers")}><ShoppingBag size={20} /> Buyer Management</button>
-          <button className={`${styles.navItem} ${activeTab === "delivery" ? styles.active : ""}`} onClick={() => setActiveTab("delivery")}><Truck size={20} /> Delivery Fleet</button>
-          <button className={`${styles.navItem} ${activeTab === "products" ? styles.active : ""}`} onClick={() => setActiveTab("products")}><Package size={20} /> Product Moderator</button>
-          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => setActiveTab("orders")}><TrendingUp size={20} /> Orders Monitor</button>
-          <button className={`${styles.navItem} ${activeTab === "complaints" ? styles.active : ""}`} onClick={() => setActiveTab("complaints")}><ShieldAlert size={20} /> Complaints ({complaints.filter(c=>c.status==="PENDING").length})</button>
-          <button className={`${styles.navItem} ${activeTab === "fraud" ? styles.active : ""}`} onClick={() => setActiveTab("fraud")}><Zap size={20} /> Fraud Logs ({fraudAlerts.filter(f=>f.status==="ACTIVE").length})</button>
-          <button className={`${styles.navItem} ${activeTab === "analytics" ? styles.active : ""}`} onClick={() => setActiveTab("analytics")}><BarChart2 size={20} /> Analytics</button>
-          <button className={`${styles.navItem} ${activeTab === "reports" ? styles.active : ""}`} onClick={() => setActiveTab("reports")}><Download size={20} /> Reports</button>
-          <button className={`${styles.navItem} ${activeTab === "settings" ? styles.active : ""}`} onClick={() => setActiveTab("settings")}><Settings size={20} /> Settings</button>
+          <button className={`${styles.navItem} ${activeTab === "dashboard" ? styles.active : ""}`} onClick={() => switchTab("dashboard")}><Activity size={20} /> Dashboard</button>
+          <button className={`${styles.navItem} ${activeTab === "users" ? styles.active : ""}`} onClick={() => switchTab("users")}><Users size={20} /> Users Registry</button>
+          <button className={`${styles.navItem} ${activeTab === "farmers" ? styles.active : ""}`} onClick={() => switchTab("farmers")}><Leaf size={20} /> Farmer Management</button>
+          <button className={`${styles.navItem} ${activeTab === "buyers" ? styles.active : ""}`} onClick={() => switchTab("buyers")}><ShoppingBag size={20} /> Buyer Management</button>
+          <button className={`${styles.navItem} ${activeTab === "delivery" ? styles.active : ""}`} onClick={() => switchTab("delivery")}><Truck size={20} /> Delivery Fleet</button>
+          <button className={`${styles.navItem} ${activeTab === "products" ? styles.active : ""}`} onClick={() => switchTab("products")}><Package size={20} /> Product Moderator</button>
+          <button className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`} onClick={() => switchTab("orders")}><TrendingUp size={20} /> Orders Monitor</button>
+          <button className={`${styles.navItem} ${activeTab === "complaints" ? styles.active : ""}`} onClick={() => switchTab("complaints")}><ShieldAlert size={20} /> Complaints ({complaints.filter(c=>c.status==="PENDING").length})</button>
+          <button className={`${styles.navItem} ${activeTab === "fraud" ? styles.active : ""}`} onClick={() => switchTab("fraud")}><Zap size={20} /> Fraud Logs ({fraudAlerts.filter(f=>f.status==="ACTIVE").length})</button>
+          <button className={`${styles.navItem} ${activeTab === "analytics" ? styles.active : ""}`} onClick={() => switchTab("analytics")}><BarChart2 size={20} /> Analytics</button>
+          <button className={`${styles.navItem} ${activeTab === "reports" ? styles.active : ""}`} onClick={() => switchTab("reports")}><Download size={20} /> Reports</button>
+          <button className={`${styles.navItem} ${activeTab === "settings" ? styles.active : ""}`} onClick={() => switchTab("settings")}><Settings size={20} /> Settings</button>
         </nav>
         
         <div style={{ marginTop: 'auto' }}>
@@ -193,7 +219,7 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN CONTENT WORKSPACE */}
       <main className={styles.mainContent}>
         <header className={styles.header}>
           <div>
@@ -212,7 +238,7 @@ export default function AdminDashboard() {
 
         {/* 1. DASHBOARD OVERVIEW TAB */}
         {activeTab === "dashboard" && (
-          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
             {/* STATS OVERVIEW CARDS */}
             <div className={styles.statsGrid}>
               <div className={styles.adminStatCard}>
@@ -306,152 +332,43 @@ export default function AdminDashboard() {
 
         {/* 2. USERS REGISTRY TAB */}
         {activeTab === "users" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Ecosystem Registered Users</h2>
-            <table className={styles.adminTable}>
-              <thead>
-                <tr>
-                  <th>Display Name</th>
-                  <th>Registered Email</th>
-                  <th>Core Role</th>
-                  <th>Safety Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...metrics.farmersList, ...metrics.shopOwnersList, ...metrics.agentsList].map((user, i) => {
-                  const isSuspended = !!suspendedUsers[user.id];
-                  return (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 700 }}>{user.name || "Anonymous User"}</td>
-                      <td>{user.email || "No Email linked"}</td>
-                      <td>
-                        <span className={`${styles.badge} ${
-                          user.role === 'FARMER' ? styles.badgeSuccess : 
-                          user.role === 'SHOP_OWNER' || user.role === 'CUSTOMER' ? styles.badgeInfo : styles.badgeWarning
-                        }`}>{user.role}</span>
-                      </td>
-                      <td>
-                        <span className={`${styles.badge} ${isSuspended ? styles.badgeDanger : styles.badgeSuccess}`}>
-                          {isSuspended ? "Suspended" : "Active / Verified"}
-                        </span>
-                      </td>
-                      <td>
-                        <button 
-                          onClick={() => toggleSuspension(user.id, user.email)}
-                          className={`${styles.btn} ${isSuspended ? styles.btnPrimary : styles.btnDanger}`}
-                        >
-                          {isSuspended ? "Re-Activate" : "Suspend Account"}
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* 3. FARMER MANAGEMENT TAB */}
-        {activeTab === "farmers" && (
-          <div className="animate-fade-in className={styles.card}">
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Farmer Auditing & Aadhaar Verifications</h2>
-            
-            {metrics.farmersList.length === 0 ? (
-              <p style={{ fontStyle: 'italic', color: '#64748b' }}>No registered farmers present currently.</p>
-            ) : (
+            <div className={styles.tableWrapper}>
               <table className={styles.adminTable}>
                 <thead>
                   <tr>
-                    <th>Farmer Name</th>
-                    <th>Email Address</th>
-                    <th>Organic Status</th>
-                    <th>Aadhaar Verification Number</th>
-                    <th>Approval Status</th>
+                    <th>Display Name</th>
+                    <th>Registered Email</th>
+                    <th>Core Role</th>
+                    <th>Safety Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {metrics.farmersList.map((f: any, i: number) => {
-                    const prof = f.farmerProfile;
-                    const isVerified = prof?.aadhaar;
+                  {[...metrics.farmersList, ...metrics.shopOwnersList, ...metrics.agentsList].map((user, i) => {
+                    const isSuspended = !!suspendedUsers[user.id];
                     return (
                       <tr key={i}>
-                        <td style={{ fontWeight: 700 }}>{f.name}</td>
-                        <td>{f.email}</td>
+                        <td style={{ fontWeight: 700 }}>{user.name || "Anonymous User"}</td>
+                        <td>{user.email || "No Email linked"}</td>
                         <td>
-                          <span className={`${styles.badge} ${prof?.organicStatus ? styles.badgeSuccess : styles.badgeSecondary}`}>
-                            {prof?.organicStatus ? "Certified Organic" : "Standard"}
-                          </span>
+                          <span className={`${styles.badge} ${
+                            user.role === 'FARMER' ? styles.badgeSuccess : 
+                            user.role === 'SHOP_OWNER' || user.role === 'CUSTOMER' ? styles.badgeInfo : styles.badgeWarning
+                          }`}>{user.role}</span>
                         </td>
-                        <td>
-                          <code style={{ background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 800 }}>
-                            {prof?.aadhaar ? `Verified: ${prof.aadhaar}` : "Awaiting Audit"}
-                          </code>
-                        </td>
-                        <td>
-                          <span className={`${styles.badge} ${isVerified ? styles.badgeSuccess : styles.badgeWarning}`}>
-                            {isVerified ? "Approved & Verified" : "Pending Aadhaar Verification"}
-                          </span>
-                        </td>
-                        <td>
-                          {!isVerified ? (
-                            <button 
-                              onClick={() => handleAadhaarVerification(prof.id, f.name)}
-                              className={`${styles.btn} ${styles.btnPrimary}`}
-                            >
-                              Verify Aadhaar & Approve
-                            </button>
-                          ) : (
-                            <span style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <CheckCircle size={16} /> Audited
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )}
-
-        {/* 4. BUYER MANAGEMENT TAB */}
-        {activeTab === "buyers" && (
-          <div className="animate-fade-in className={styles.card}">
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Shop Owner Procurement Audit</h2>
-            
-            {metrics.shopOwnersList.length === 0 ? (
-              <p style={{ fontStyle: 'italic', color: '#64748b' }}>No registered Shop Owners registered.</p>
-            ) : (
-              <table className={styles.adminTable}>
-                <thead>
-                  <tr>
-                    <th>Shop Owner Name</th>
-                    <th>Email</th>
-                    <th>Account Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {metrics.shopOwnersList.map((b: any, i: number) => {
-                    const isSuspended = !!suspendedUsers[b.id];
-                    return (
-                      <tr key={i}>
-                        <td style={{ fontWeight: 700 }}>{b.name}</td>
-                        <td>{b.email}</td>
                         <td>
                           <span className={`${styles.badge} ${isSuspended ? styles.badgeDanger : styles.badgeSuccess}`}>
-                            {isSuspended ? "Account Locked" : "Operational / Active"}
+                            {isSuspended ? "Suspended" : "Active / Verified"}
                           </span>
                         </td>
                         <td>
                           <button 
-                            onClick={() => toggleSuspension(b.id, b.email)}
+                            onClick={() => toggleSuspension(user.id, user.email)}
                             className={`${styles.btn} ${isSuspended ? styles.btnPrimary : styles.btnDanger}`}
                           >
-                            {isSuspended ? "Restore Operations" : "Suspend Procurement"}
+                            {isSuspended ? "Re-Activate" : "Suspend"}
                           </button>
                         </td>
                       </tr>
@@ -459,144 +376,265 @@ export default function AdminDashboard() {
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* 3. FARMER MANAGEMENT TAB */}
+        {activeTab === "farmers" && (
+          <div className={styles.card}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Farmer Auditing & Aadhaar Verifications</h2>
+            
+            {metrics.farmersList.length === 0 ? (
+              <p style={{ fontStyle: 'italic', color: '#64748b' }}>No registered farmers present currently.</p>
+            ) : (
+              <div className={styles.tableWrapper}>
+                <table className={styles.adminTable}>
+                  <thead>
+                    <tr>
+                      <th>Farmer Name</th>
+                      <th>Email Address</th>
+                      <th>Organic Status</th>
+                      <th>Aadhaar Number</th>
+                      <th>Approval Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {metrics.farmersList.map((f: any, i: number) => {
+                      const prof = f.farmerProfile;
+                      const isVerified = prof?.aadhaar;
+                      return (
+                        <tr key={i}>
+                          <td style={{ fontWeight: 700 }}>{f.name}</td>
+                          <td>{f.email}</td>
+                          <td>
+                            <span className={`${styles.badge} ${prof?.organicStatus ? styles.badgeSuccess : styles.badgeSecondary}`}>
+                              {prof?.organicStatus ? "Organic" : "Standard"}
+                            </span>
+                          </td>
+                          <td>
+                            <code style={{ background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 800 }}>
+                              {prof?.aadhaar ? `Verified: ${prof.aadhaar}` : "Awaiting Audit"}
+                            </code>
+                          </td>
+                          <td>
+                            <span className={`${styles.badge} ${isVerified ? styles.badgeSuccess : styles.badgeWarning}`}>
+                              {isVerified ? "Verified" : "Pending Verification"}
+                            </span>
+                          </td>
+                          <td>
+                            {!isVerified ? (
+                              <button 
+                                onClick={() => handleAadhaarVerification(prof.id, f.name)}
+                                className={`${styles.btn} ${styles.btnPrimary}`}
+                              >
+                                Verify & Approve
+                              </button>
+                            ) : (
+                              <span style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                <CheckCircle size={16} /> Audited
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 4. BUYER MANAGEMENT TAB */}
+        {activeTab === "buyers" && (
+          <div className={styles.card}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Shop Owner Procurement Audit</h2>
+            
+            {metrics.shopOwnersList.length === 0 ? (
+              <p style={{ fontStyle: 'italic', color: '#64748b' }}>No registered Shop Owners registered.</p>
+            ) : (
+              <div className={styles.tableWrapper}>
+                <table className={styles.adminTable}>
+                  <thead>
+                    <tr>
+                      <th>Shop Owner Name</th>
+                      <th>Email</th>
+                      <th>Account Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {metrics.shopOwnersList.map((b: any, i: number) => {
+                      const isSuspended = !!suspendedUsers[b.id];
+                      return (
+                        <tr key={i}>
+                          <td style={{ fontWeight: 700 }}>{b.name}</td>
+                          <td>{b.email}</td>
+                          <td>
+                            <span className={`${styles.badge} ${isSuspended ? styles.badgeDanger : styles.badgeSuccess}`}>
+                              {isSuspended ? "Suspended" : "Active"}
+                            </span>
+                          </td>
+                          <td>
+                            <button 
+                              onClick={() => toggleSuspension(b.id, b.email)}
+                              className={`${styles.btn} ${isSuspended ? styles.btnPrimary : styles.btnDanger}`}
+                            >
+                              {isSuspended ? "Restore Operations" : "Suspend"}
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
 
         {/* 5. DELIVERY FLEET TAB */}
         {activeTab === "delivery" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Delivery Fleet Logistics & Dispatches</h2>
             
             {metrics.deliveriesList.length === 0 ? (
               <p style={{ fontStyle: 'italic', color: '#64748b', textAlign: 'center', padding: '3rem' }}>No active transit routes scheduled right now.</p>
             ) : (
-              <table className={styles.adminTable}>
-                <thead>
-                  <tr>
-                    <th>Active Driver</th>
-                    <th>Email</th>
-                    <th>Assigned Crop Shipment</th>
-                    <th>Logistics Status</th>
-                    <th>Estimated Dispatch Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {metrics.deliveriesList.map((d: any, i: number) => (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 700 }}>{d.deliveryBoy?.name || "Driver"}</td>
-                      <td>{d.deliveryBoy?.email}</td>
-                      <td>{d.order?.negotiation?.product?.name || "Cargo load"}</td>
-                      <td>
-                        <span className={`${styles.badge} ${
-                          d.status === 'DELIVERED' ? styles.badgeSuccess : 
-                          d.status === 'SHIPPED' ? styles.badgeInfo : styles.badgeWarning
-                        }`}>{d.status}</span>
-                      </td>
-                      <td>{d.estimatedTime ? new Date(d.estimatedTime).toLocaleString() : "Not scheduled"}</td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.adminTable}>
+                  <thead>
+                    <tr>
+                      <th>Active Driver</th>
+                      <th>Email</th>
+                      <th>Assigned Crop Shipment</th>
+                      <th>Logistics Status</th>
+                      <th>Estimated Dispatch Time</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {metrics.deliveriesList.map((d: any, i: number) => (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 700 }}>{d.deliveryBoy?.name || "Driver"}</td>
+                        <td>{d.deliveryBoy?.email}</td>
+                        <td>{d.order?.negotiation?.product?.name || "Cargo load"}</td>
+                        <td>
+                          <span className={`${styles.badge} ${
+                            d.status === 'DELIVERED' ? styles.badgeSuccess : 
+                            d.status === 'SHIPPED' ? styles.badgeInfo : styles.badgeWarning
+                          }`}>{d.status}</span>
+                        </td>
+                        <td>{d.estimatedTime ? new Date(d.estimatedTime).toLocaleString() : "Not scheduled"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
 
         {/* 6. PRODUCT MODERATOR TAB */}
         {activeTab === "products" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Product Moderation Dashboard</h2>
             
             {metrics.productsList.length === 0 ? (
               <p style={{ fontStyle: 'italic', color: '#64748b', textAlign: 'center', padding: '3rem' }}>No active crops listed in the marketplace inventory.</p>
             ) : (
-              <table className={styles.adminTable}>
-                <thead>
-                  <tr>
-                    <th>Crop Name</th>
-                    <th>Farmer Owner</th>
-                    <th>Base Price</th>
-                    <th>Listed Quantity</th>
-                    <th>Category</th>
-                    <th>Safety Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {metrics.productsList.map((p: any, i: number) => (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 700 }}>{p.name}</td>
-                      <td>{p.farmer?.user?.name || "Farmer"}</td>
-                      <td>₹{p.price} / {p.unit}</td>
-                      <td>{p.quantity} {p.unit}</td>
-                      <td>
-                        <span className={`${styles.badge} ${styles.badgeInfo}`}>{p.category}</span>
-                      </td>
-                      <td>
-                        <button 
-                          onClick={() => handleProductModeration(p.id, p.name)}
-                          className={`${styles.btn} ${styles.btnDanger}`}
-                        >
-                          Moderate & Delete
-                        </button>
-                      </td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.adminTable}>
+                  <thead>
+                    <tr>
+                      <th>Crop Name</th>
+                      <th>Farmer Owner</th>
+                      <th>Base Price</th>
+                      <th>Quantity</th>
+                      <th>Category</th>
+                      <th>Safety Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {metrics.productsList.map((p: any, i: number) => (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 700 }}>{p.name}</td>
+                        <td>{p.farmer?.user?.name || "Farmer"}</td>
+                        <td>₹{p.price} / {p.unit}</td>
+                        <td>{p.quantity} {p.unit}</td>
+                        <td>
+                          <span className={`${styles.badge} ${styles.badgeInfo}`}>{p.category}</span>
+                        </td>
+                        <td>
+                          <button 
+                            onClick={() => handleProductModeration(p.id, p.name)}
+                            className={`${styles.btn} ${styles.btnDanger}`}
+                          >
+                            Moderate
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
 
         {/* 7. ORDERS MONITOR TAB */}
         {activeTab === "orders" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Order Transaction Ledger</h2>
             
             {metrics.ordersList.length === 0 ? (
               <p style={{ fontStyle: 'italic', color: '#64748b', textAlign: 'center', padding: '3rem' }}>No completed orders registered in the system ledger.</p>
             ) : (
-              <table className={styles.adminTable}>
-                <thead>
-                  <tr>
-                    <th>Order Identifier</th>
-                    <th>Procuring Shop Owner</th>
-                    <th>Negotiated Crop</th>
-                    <th>Bargain Price Value</th>
-                    <th>Transaction Status</th>
-                    <th>Placed Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {metrics.ordersList.map((o: any, i: number) => (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 800 }}>#{o.id.substring(0, 8).toUpperCase()}</td>
-                      <td>{o.user?.name || "Shop Owner"}</td>
-                      <td>{o.negotiation?.product?.name || "Bulk Cargo"}</td>
-                      <td style={{ fontWeight: 700, color: '#10b981' }}>₹{o.totalAmount}</td>
-                      <td>
-                        <span className={`${styles.badge} ${
-                          o.status === 'DELIVERED' ? styles.badgeSuccess : 
-                          o.status === 'SHIPPED' ? styles.badgeInfo : styles.badgeWarning
-                        }`}>{o.status}</span>
-                      </td>
-                      <td>{new Date(o.createdAt).toLocaleDateString()}</td>
+              <div className={styles.tableWrapper}>
+                <table className={styles.adminTable}>
+                  <thead>
+                    <tr>
+                      <th>Order Identifier</th>
+                      <th>Procuring Shop Owner</th>
+                      <th>Negotiated Crop</th>
+                      <th>Bargain Price</th>
+                      <th>Transaction Status</th>
+                      <th>Placed Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {metrics.ordersList.map((o: any, i: number) => (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 800 }}>#{o.id.substring(0, 8).toUpperCase()}</td>
+                        <td>{o.user?.name || "Shop Owner"}</td>
+                        <td>{o.negotiation?.product?.name || "Bulk Cargo"}</td>
+                        <td style={{ fontWeight: 700, color: '#10b981' }}>₹{o.totalAmount}</td>
+                        <td>
+                          <span className={`${styles.badge} ${
+                            o.status === 'DELIVERED' ? styles.badgeSuccess : 
+                            o.status === 'SHIPPED' ? styles.badgeInfo : styles.badgeWarning
+                          }`}>{o.status}</span>
+                        </td>
+                        <td>{new Date(o.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
 
         {/* 8. COMPLAINTS RESOLUTION TAB */}
         {activeTab === "complaints" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Ecosystem Customer Support Tickets</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {complaints.map((c, i) => (
-                <div key={i} className={styles.adminStatCard} style={{ borderLeft: c.status === "PENDING" ? '5px solid #d97706' : '5px solid #10b981', justifyContent: 'space-between', padding: '1.5rem 2rem' }}>
+                <div key={i} className={styles.adminStatCard} style={{ borderLeft: c.status === "PENDING" ? '5px solid #d97706' : '5px solid #10b981', justifyContent: 'space-between', padding: '1.5rem 2rem', flexDirection: 'row', flexWrap: 'wrap', gap: '1rem' }}>
                   <div>
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                       <span style={{ fontSize: '0.75rem', fontWeight: 800, background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>{c.id}</span>
                       <span className={`${styles.badge} ${c.status === "PENDING" ? styles.badgeWarning : styles.badgeSuccess}`}>{c.status}</span>
                     </div>
@@ -609,7 +647,7 @@ export default function AdminDashboard() {
                       onClick={() => handleResolveComplaint(c.id)}
                       className={`${styles.btn} ${styles.btnPrimary}`}
                     >
-                      Mark as Resolved
+                      Resolve
                     </button>
                   )}
                 </div>
@@ -620,18 +658,18 @@ export default function AdminDashboard() {
 
         {/* 9. FRAUD DETECTION TAB */}
         {activeTab === "fraud" && (
-          <div className="animate-fade-in className={styles.card}">
+          <div className={styles.card}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem' }}>Ecosystem Anomaly & Fraud Logs</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {fraudAlerts.map((f, i) => (
-                <div key={i} className={styles.adminStatCard} style={{ borderLeft: f.status === "ACTIVE" ? '5px solid #e11d48' : '5px solid #64748b', justifyContent: 'space-between', padding: '1.5rem 2rem' }}>
+                <div key={i} className={styles.adminStatCard} style={{ borderLeft: f.status === "ACTIVE" ? '5px solid #e11d48' : '5px solid #64748b', justifyContent: 'space-between', padding: '1.5rem 2rem', flexDirection: 'row', flexWrap: 'wrap', gap: '1rem' }}>
                   <div>
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                       <span style={{ fontSize: '0.75rem', fontWeight: 800, background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>{f.id}</span>
                       <span className={`${styles.badge} ${f.severity === "HIGH" ? styles.badgeDanger : f.severity === "MEDIUM" ? styles.badgeWarning : styles.badgeInfo}`}>{f.severity} Severity Anomaly</span>
                       <span className={`${styles.badge} ${f.status === "ACTIVE" ? styles.badgeDanger : styles.badgeSuccess}`}>{f.status}</span>
                     </div>
-                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <AlertTriangle size={20} color="#e11d48" /> {f.title}
                     </h3>
                     <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b' }}>Detected <strong>{f.date}</strong> by AI Fraud Monitor</p>
@@ -653,7 +691,7 @@ export default function AdminDashboard() {
 
         {/* 10. ANALYTICS CHART TAB */}
         {activeTab === "analytics" && (
-          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
             <div className={styles.grid2}>
               {/* CHART 1: USER GROWTH */}
               <section className={styles.card}>
@@ -668,7 +706,7 @@ export default function AdminDashboard() {
                 <p style={{ marginTop: '3.5rem', color: '#64748b', fontSize: '0.9rem', textAlign: 'center', fontWeight: 600 }}>Active registered accounts month-over-month</p>
               </section>
 
-              {/* CHART 2: REVENUE ANALYTICS */}
+              {/* CHART 2: REVENUE */}
               <section className={styles.card}>
                 <div className={styles.cardHeader}><h2>Revenue Volume Analytics</h2></div>
                 <div className={styles.chartContainer}>
@@ -714,13 +752,13 @@ export default function AdminDashboard() {
 
         {/* 11. REPORTS EXPORT TAB */}
         {activeTab === "reports" && (
-          <div className="animate-fade-in className={styles.card}" style={{ padding: '3.5rem', textAlign: 'center' }}>
+          <div className={styles.card} style={{ padding: '3.5rem', textAlign: 'center' }}>
             <Download size={64} color="#6366f1" style={{ margin: '0 auto 2rem' }} />
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1rem' }}>Export Operational Ledger Reports</h2>
             <p style={{ color: '#64748b', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: '1.6' }}>
               Compile all current platform statistics, active inventories, transaction records, audit configurations, and complaints resolution metrics into a single, high-fidelity Excel-compatible CSV file.
             </p>
-            <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button 
                 onClick={handleExportCSV}
                 className={`${styles.btn} ${styles.btnPrimary}`}
@@ -734,7 +772,7 @@ export default function AdminDashboard() {
 
         {/* 12. SYSTEM SETTINGS TAB */}
         {activeTab === "settings" && (
-          <div className="animate-fade-in className={styles.card}" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+          <div className={styles.card} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Ecosystem Operational Rules Settings</h2>
             
             <div className={styles.grid2} style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '2rem' }}>
