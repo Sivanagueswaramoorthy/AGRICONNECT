@@ -497,7 +497,7 @@ export default function DeliveryDashboard() {
 
         {/* VEHICLE & PROFILE DETAILS TAB */}
         {activeTab === "vehicle" && (
-          <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
             
             {/* DRIVER PERSONAL DETAILS & PROFILE */}
             <div className={styles.routeCard} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', height: 'fit-content' }}>
@@ -592,19 +592,19 @@ export default function DeliveryDashboard() {
 
                   {/* Personal details list */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <span style={{ color: '#64748b', fontWeight: 600 }}>Email Address</span>
-                      <strong style={{ color: '#0f172a' }}>{profile.email}</strong>
+                      <strong style={{ color: '#0f172a', wordBreak: 'break-all' }}>{profile.email}</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <span style={{ color: '#64748b', fontWeight: 600 }}>Phone Number</span>
                       <strong style={{ color: '#0f172a' }}>{profile.mobile}</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <span style={{ color: '#64748b', fontWeight: 600 }}>Active Shift</span>
                       <strong style={{ color: '#0f172a' }}>{profile.shift}</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <span style={{ color: '#64748b', fontWeight: 600 }}>Assigned Hub</span>
                       <strong style={{ color: '#2563eb' }}>{profile.hub}</strong>
                     </div>
@@ -707,37 +707,37 @@ export default function DeliveryDashboard() {
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Vehicle Type</span>
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.type}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Plate Number</span>
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.plate}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Payload Capacity</span>
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.capacity}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Cold Storage Status</span>
                     <span style={{ fontWeight: 800, color: '#10b981' }}>{vehicle.tempControl}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Fuel Efficiency</span>
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.fuelEfficiency}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Insurance Status</span>
                     <span style={{ fontWeight: 800, color: '#10b981' }}>{vehicle.insurance}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Vehicle Health</span>
                     <span style={{ fontWeight: 800, color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                       <CheckCircle size={16} /> {vehicle.health}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <span style={{ color: '#64748b', fontWeight: 600 }}>Last Maintenance</span>
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.lastMaintenance}</span>
                   </div>

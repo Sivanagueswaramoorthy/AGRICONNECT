@@ -285,7 +285,7 @@ export default function FarmerDashboard() {
                </div>
              </div>
 
-             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
                <div className={styles.card}>
                  <h3 style={{ marginBottom: '1.5rem', fontWeight: 800 }}>Revenue Analytics (Monthly)</h3>
                  <div style={{ height: '250px', display: 'flex', alignItems: 'flex-end', gap: '10px', padding: '1rem', background: '#f8fafc', borderRadius: '16px' }}>
@@ -432,7 +432,7 @@ export default function FarmerDashboard() {
                 </p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {orders.map((order, i) => {
                   const isDelivered = order.status === "DELIVERED";
                   const hasAgent = order.deliveryAgentName && order.deliveryAgentName !== "Self Pickup";
@@ -555,7 +555,7 @@ export default function FarmerDashboard() {
               ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
                   {negotiations.map((neg, i) => (
-                    <div key={i} className={styles.card} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: (neg.status === 'PENDING' || neg.status === 'BUYER_ACCEPTED') ? '4px solid #f59e0b' : (neg.status === 'ACCEPTED' || neg.status === 'ORDER_PLACED') ? '4px solid #10b981' : neg.status === 'REJECTED' ? '4px solid #ef4444' : '4px solid #2563eb' }}>
+                    <div key={i} className={styles.card} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderLeft: (neg.status === 'PENDING' || neg.status === 'BUYER_ACCEPTED') ? '4px solid #f59e0b' : (neg.status === 'ACCEPTED' || neg.status === 'ORDER_PLACED') ? '4px solid #10b981' : neg.status === 'REJECTED' ? '4px solid #ef4444' : '4px solid #2563eb' }}>
                       <div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                           <span style={{ padding: '4px 10px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>{neg.status.replace("_", " ")}</span>

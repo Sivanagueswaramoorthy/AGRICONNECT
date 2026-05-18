@@ -263,7 +263,7 @@ export default function ShopOwnerDashboard() {
           <div className="animate-fade-in">
              <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2.5rem', letterSpacing: '-0.02em' }}>Procurement Overview</h2>
              
-             <div className={styles.statsGrid} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
+             <div className={styles.statsGrid} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
                 <div style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '24px', border: '1px solid #f1f5f9' }}>
                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.5rem' }}>Active Orders</span><Truck size={20} color="#2563eb" /></div>
                    <div style={{ fontSize: '2rem', fontWeight: 800 }}>{stats.activeOrders}</div>
@@ -278,7 +278,7 @@ export default function ShopOwnerDashboard() {
                 </div>
              </div>
 
-             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
                <div className={styles.card}>
                   <h3 style={{ marginBottom: '1.5rem', fontWeight: 800 }}>Recent Orders</h3>
                   {orders.length === 0 ? <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No active orders found.</p> : (
@@ -400,7 +400,7 @@ export default function ShopOwnerDashboard() {
              
              {/* Examples Section */}
              <h3 style={{ marginTop: '3rem', marginBottom: '1.5rem', fontWeight: 800 }}>Popular Subscription Plans</h3>
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                <div className={styles.card} style={{ textAlign: 'center' }}>
                  <div style={{ width: '60px', height: '60px', background: '#eff6ff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}><RefreshCw size={24} color="#2563eb" /></div>
                  <h4 style={{ fontWeight: 800, marginBottom: '0.5rem' }}>Daily Milk</h4>
@@ -438,7 +438,7 @@ export default function ShopOwnerDashboard() {
               ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
                   {negotiations.map((neg, i) => (
-                    <div key={i} className={styles.card} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: neg.status === 'COUNTERED' || neg.status === 'ACCEPTED' ? '4px solid #f59e0b' : neg.status === 'ORDER_PLACED' ? '4px solid #10b981' : neg.status === 'REJECTED' ? '4px solid #ef4444' : '4px solid #2563eb' }}>
+                    <div key={i} className={styles.card} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderLeft: neg.status === 'COUNTERED' || neg.status === 'ACCEPTED' ? '4px solid #f59e0b' : neg.status === 'ORDER_PLACED' ? '4px solid #10b981' : neg.status === 'REJECTED' ? '4px solid #ef4444' : '4px solid #2563eb' }}>
                       <div>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                           <span style={{ padding: '4px 10px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>{neg.status.replace("_", " ")}</span>
@@ -583,7 +583,7 @@ export default function ShopOwnerDashboard() {
                <div style={{ display: 'grid', gap: '1rem' }}>
                  {orders.map((order, i) => (
                    <div key={i} className={styles.productCard} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', borderLeft: order.status === 'DELIVERED' ? '4px solid #10b981' : '4px solid #f59e0b' }}>
-                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
                        <div>
                          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                            <span style={{ padding: '4px 10px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>{order.status}</span>
@@ -594,17 +594,18 @@ export default function ShopOwnerDashboard() {
                        </div>
                               {order.deliveryAgentName && (
                           <div style={{ 
-                            textAlign: 'right', 
+                            textAlign: 'left', 
                             background: order.delivery?.status === 'REJECTED' ? '#fef2f2' : order.deliveryAgentName === 'Self Pickup' ? '#f0fdf4' : '#eff6ff', 
                             padding: '1rem 1.5rem', 
                             borderRadius: '16px',
+                            minWidth: '220px',
                             border: order.delivery?.status === 'REJECTED' ? '1px solid #fecaca' : order.deliveryAgentName === 'Self Pickup' ? '1px solid #bbf7d0' : '1px solid #bfdbfe'
                           }}>
                             <div style={{ 
                               display: 'flex', 
                               alignItems: 'center', 
                               gap: '0.5rem', 
-                              justifyContent: 'flex-end', 
+                              justifyContent: 'flex-start', 
                               color: order.delivery?.status === 'REJECTED' ? '#dc2626' : order.deliveryAgentName === 'Self Pickup' ? '#16a34a' : '#2563eb', 
                               fontWeight: 800, 
                               marginBottom: '0.5rem' 
