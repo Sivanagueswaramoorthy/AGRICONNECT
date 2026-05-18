@@ -27,12 +27,14 @@ export default function DeliveryDashboard() {
 
   // Editable Vehicle Details State
   const [vehicle, setVehicle] = useState({
-    type: "Refrigerated Mini-Truck",
+    type: "Refrigerated Mini Truck",
     plate: "MH-12-PQ-8874",
     capacity: "2.5 Metric Tons",
-    tempControl: "Yes (Maintained at 4°C)",
-    insurance: "Valid until Nov 2026",
-    status: "Active & Cleaned"
+    tempControl: "Active (4°C maintained)",
+    fuelEfficiency: "18 km/L",
+    insurance: "Active till Nov 2026",
+    health: "Excellent",
+    lastMaintenance: "12 May 2026"
   });
   const [isEditingVehicle, setIsEditingVehicle] = useState(false);
 
@@ -471,46 +473,87 @@ export default function DeliveryDashboard() {
         {activeTab === "vehicle" && (
           <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             
-            {/* DRIVER PROFILE CARD */}
-            <div className={styles.routeCard} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', height: 'fit-content' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <div style={{ width: '80px', height: '80px', background: '#eff6ff', color: '#2563eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800 }}>
-                  {driverName.substring(0, 2).toUpperCase()}
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800 }}>{driverName}</h3>
-                  <p style={{ margin: 0, color: '#2563eb', fontWeight: 700 }}>Logistics & Route Specialist</p>
+            {/* LOGISTICS PERFORMANCE CENTER */}
+            <div className={styles.routeCard} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', height: 'fit-content' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>Logistics Performance Center</h3>
+                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: '#64748b' }}>Real-time driver operational analytics and efficiency tracking.</p>
+              </div>
+
+              {/* Today's Delivery Summary */}
+              <div>
+                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Today's Delivery Summary</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Deliveries Completed</p>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>18</p>
+                  </div>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Pending Deliveries</p>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>5</p>
+                  </div>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Success Rate</p>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#2563eb' }}>97.8%</p>
+                  </div>
+                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Total Distance Today</p>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#0f172a' }}>126 km</p>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontWeight: 600 }}>Driver License</span>
-                  <span style={{ fontWeight: 800, color: '#0f172a' }}>DL-985474120</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontWeight: 600 }}>Contact Email</span>
-                  <span style={{ fontWeight: 800, color: '#0f172a' }}>{driverEmail}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontWeight: 600 }}>Logistics Hub</span>
-                  <span style={{ fontWeight: 800, color: '#0f172a' }}>Pune Main Transit Hub</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontWeight: 600 }}>Compliance Rating</span>
-                  <span style={{ fontWeight: 800, color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <Award size={16} /> 4.98 / 5.00
-                  </span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#64748b', fontWeight: 600 }}>Security Status</span>
-                  <span style={{ fontWeight: 800, color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <Shield size={16} /> Background Verified
-                  </span>
+              {/* Performance Metrics */}
+              <div>
+                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Performance Metrics</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>On-Time Delivery Score</span>
+                    <strong style={{ color: '#0f172a' }}>4.9/5</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Average Delivery Time</span>
+                    <strong style={{ color: '#0f172a' }}>22 mins</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Customer Satisfaction</span>
+                    <strong style={{ color: '#10b981' }}>98%</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Route Efficiency</span>
+                    <strong style={{ color: '#2563eb' }}>High</strong>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid #fee2e2', marginTop: '1.5rem', paddingTop: '1.5rem' }}>
+              {/* Live Status */}
+              <div>
+                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Live Status</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    <span>🟢</span>
+                    <strong style={{ color: '#10b981' }}>Available for Orders</strong>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    <span>📍</span>
+                    <span style={{ color: '#64748b' }}>Current Hub:</span>
+                    <strong style={{ color: '#0f172a' }}>Chennai Central Zone</strong>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    <span>⏰</span>
+                    <span style={{ color: '#64748b' }}>Shift:</span>
+                    <strong style={{ color: '#0f172a' }}>8:00 AM – 6:00 PM</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Button */}
+              <button className={styles.primaryBtn} style={{ padding: '0.75rem', width: '100%', justifyContent: 'center' }}>
+                View Full Analytics →
+              </button>
+
+              {/* Danger Zone */}
+              <div style={{ borderTop: '1px solid #fee2e2', paddingTop: '1.5rem', marginTop: '1rem' }}>
                 <h4 style={{ color: '#ef4444', fontWeight: 800, margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>Danger Zone</h4>
                 <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1rem', lineHeight: '1.4' }}>Once you delete your account, you will be permanently removed from all pending deliveries and route dispatch assignments.</p>
                 <button className={styles.secondaryBtn} onClick={handleDeleteAccount} style={{ background: '#fef2f2', color: '#ef4444', borderColor: '#fecaca', width: 'auto', padding: '0.6rem 1.5rem', fontSize: '0.85rem', fontWeight: 700 }}>Delete Account</button>
@@ -521,7 +564,7 @@ export default function DeliveryDashboard() {
             <div className={styles.routeCard} style={{ padding: '2.5rem', position: 'relative' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Truck size={24} color="#2563eb" /> Vehicle Fleet Record
+                  <Truck size={24} color="#2563eb" /> Fleet & Compliance Dashboard
                 </h3>
                 <button 
                   onClick={() => setIsEditingVehicle(!isEditingVehicle)}
@@ -538,7 +581,7 @@ export default function DeliveryDashboard() {
               {isEditingVehicle ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Vehicle Category</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Vehicle Type</label>
                     <input 
                       type="text" value={vehicle.type} 
                       onChange={(e) => setVehicle({ ...vehicle, type: e.target.value })}
@@ -546,7 +589,7 @@ export default function DeliveryDashboard() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Registration License Plate</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Plate Number</label>
                     <input 
                       type="text" value={vehicle.plate} 
                       onChange={(e) => setVehicle({ ...vehicle, plate: e.target.value })}
@@ -554,7 +597,7 @@ export default function DeliveryDashboard() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Payload Load Capacity</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Payload Capacity</label>
                     <input 
                       type="text" value={vehicle.capacity} 
                       onChange={(e) => setVehicle({ ...vehicle, capacity: e.target.value })}
@@ -562,10 +605,42 @@ export default function DeliveryDashboard() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Temperature Cold Control Status</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Cold Storage Status</label>
                     <input 
                       type="text" value={vehicle.tempControl} 
                       onChange={(e) => setVehicle({ ...vehicle, tempControl: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Fuel Efficiency</label>
+                    <input 
+                      type="text" value={vehicle.fuelEfficiency} 
+                      onChange={(e) => setVehicle({ ...vehicle, fuelEfficiency: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Insurance Status</label>
+                    <input 
+                      type="text" value={vehicle.insurance} 
+                      onChange={(e) => setVehicle({ ...vehicle, insurance: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Vehicle Health</label>
+                    <input 
+                      type="text" value={vehicle.health} 
+                      onChange={(e) => setVehicle({ ...vehicle, health: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Last Maintenance</label>
+                    <input 
+                      type="text" value={vehicle.lastMaintenance} 
+                      onChange={(e) => setVehicle({ ...vehicle, lastMaintenance: e.target.value })}
                       style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
                     />
                   </div>
@@ -585,18 +660,26 @@ export default function DeliveryDashboard() {
                     <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.capacity}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Temp Controlled</span>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Cold Storage Status</span>
                     <span style={{ fontWeight: 800, color: '#10b981' }}>{vehicle.tempControl}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Transit Status</span>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Fuel Efficiency</span>
+                    <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.fuelEfficiency}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Insurance Status</span>
+                    <span style={{ fontWeight: 800, color: '#10b981' }}>{vehicle.insurance}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Vehicle Health</span>
                     <span style={{ fontWeight: 800, color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <CheckCircle size={16} /> {vehicle.status}
+                      <CheckCircle size={16} /> {vehicle.health}
                     </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Cargo Insurance</span>
-                    <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.insurance}</span>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Last Maintenance</span>
+                    <span style={{ fontWeight: 800, color: '#0f172a' }}>{vehicle.lastMaintenance}</span>
                   </div>
                 </div>
               )}
