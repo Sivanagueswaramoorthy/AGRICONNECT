@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
+import PWAInstallPrompt from "./PWAInstallPrompt";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -15,5 +16,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider>
+      {children}
+      <PWAInstallPrompt />
+    </SessionProvider>
+  );
 }
