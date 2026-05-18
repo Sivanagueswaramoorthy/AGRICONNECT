@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { 
   LayoutDashboard, Package, ShoppingCart, BarChart3, 
   Settings, LogOut, Plus, Search, Bell, Gavel, 
-  Check, X, Calendar, User, MapPin, Leaf, Edit2, Trash2, 
+  Check, X, Calendar, User, MapPin, Leaf, Edit2, Trash2, Phone,
   ChevronRight, MoreHorizontal, AlertCircle, RefreshCw, Truck, Camera, Image as ImageIcon,
   DollarSign, TrendingUp, Activity, Cpu, CloudRain, Sun, Menu
 } from "lucide-react";
@@ -414,42 +414,131 @@ export default function FarmerDashboard() {
 
         {activeTab === "orders" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-               <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Order Management</h2>
-             </div>
-             <div className={styles.card}>
-               {orders.length === 0 ? <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No active orders found.</p> : (
-                 <div className={styles.tableWrapper}>
-                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                     <thead style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
-                       <tr>
-                         <th style={{ padding: '1rem', textAlign: 'left' }}>Order ID</th>
-                         <th style={{ padding: '1rem', textAlign: 'left' }}>Buyer</th>
-                         <th style={{ padding: '1rem', textAlign: 'left' }}>Date</th>
-                         <th style={{ padding: '1rem', textAlign: 'left' }}>Amount</th>
-                         <th style={{ padding: '1rem', textAlign: 'left' }}>Status</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       {orders.map((o, i) => (
-                         <tr key={i} style={{ borderBottom: '1px solid #f8fafc' }}>
-                           <td style={{ padding: '1.25rem', fontWeight: 800 }}>#{o.id.substring(0, 8)}</td>
-                           <td style={{ padding: '1.25rem' }}>
-                             <div style={{ fontWeight: 700, color: '#0f172a' }}>{o.user?.name || "Verified Buyer"}</div>
-                             <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{o.user?.email || "N/A"}</div>
-                           </td>
-                           <td style={{ padding: '1.25rem', color: '#64748b' }}>{new Date(o.createdAt).toLocaleDateString()}</td>
-                           <td style={{ padding: '1.25rem', fontWeight: 800, color: '#10b981' }}>₹{o.totalAmount}</td>
-                           <td style={{ padding: '1.25rem' }}><span style={{ padding: '0.4rem 0.8rem', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 800, background: o.status === 'DELIVERED' ? '#ecfdf5' : '#eff6ff', color: o.status === 'DELIVERED' ? '#10b981' : '#2563eb' }}>{o.status}</span></td>
-                         </tr>
-                       ))}
-                     </tbody>
-                   </table>
-                 </div>
-               )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+              <div>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Order Logistics & Fulfillment</h2>
+                <p style={{ margin: '0.25rem 0 0 0', color: '#64748b', fontSize: '0.95rem' }}>Monitor your purchase orders, dispatch status, and coordinate with live delivery agents.</p>
               </div>
-           </div>
-         )}
+            </div>
+
+            {orders.length === 0 ? (
+              <div className={styles.card} style={{ textAlign: 'center', padding: '5rem 2rem' }}>
+                <div style={{ width: '80px', height: '80px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', border: '1px solid #e2e8f0' }}>
+                  <ShoppingCart size={40} color="#94a3b8" />
+                </div>
+                <h3 style={{ color: '#0f172a', fontWeight: 800, fontSize: '1.5rem', margin: '0 0 0.5rem 0' }}>No Orders Recorded</h3>
+                <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: '380px', margin: '0 auto', lineHeight: 1.5 }}>
+                  Once shop owners accept your bargains and assign delivery vehicles, active transport orders will appear here.
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))', gap: '1.5rem' }}>
+                {orders.map((order, i) => {
+                  const isDelivered = order.status === "DELIVERED";
+                  const hasAgent = order.deliveryAgentName && order.deliveryAgentName !== "Self Pickup";
+                  const hasValidPhone = order.deliveryAgentMobile && order.deliveryAgentMobile !== "N/A";
+                  
+                  return (
+                    <div 
+                      key={i} 
+                      className={styles.card} 
+                      style={{ 
+                        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.5rem', 
+                        padding: '2rem', borderTop: isDelivered ? '4px solid #10b981' : '4px solid #2563eb',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+                        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                      }}
+                    >
+                      {/* Top Header Row */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 800, padding: '0.35rem 0.75rem', background: '#f1f5f9', color: '#475569', borderRadius: '20px' }}>
+                            #ORD-{order.id.substring(0, 8).toUpperCase()}
+                          </span>
+                          <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: '#64748b' }}>
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <span 
+                          style={{ 
+                            padding: '0.4rem 0.8rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 800, 
+                            background: isDelivered ? '#ecfdf5' : '#eff6ff', 
+                            color: isDelivered ? '#10b981' : '#2563eb' 
+                          }}
+                        >
+                          {order.status}
+                        </span>
+                      </div>
+
+                      {/* Product details */}
+                      <div>
+                        <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                          {order.negotiation ? `${order.negotiation.offeredQuantity}x ${order.negotiation.product?.name}` : (order.items || []).map((item: any) => `${item.quantity}x ${item.product?.name}`).join(", ") || "Fresh Produce"}
+                        </h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.9rem', color: '#64748b' }}>
+                          <p style={{ margin: 0 }}>
+                            <span style={{ fontWeight: 600 }}>Buyer:</span> {order.user?.name || "Verified Buyer"} ({order.user?.email || "N/A"})
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Pricing and Logistics info */}
+                      <div 
+                        style={{ 
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+                          background: '#f8fafc', padding: '1.25rem', borderRadius: '16px', border: '1px solid #f1f5f9' 
+                        }}
+                      >
+                        <div>
+                          <span style={{ display: 'block', fontSize: '0.8rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Payout Amount</span>
+                          <span style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>₹{order.totalAmount}</span>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ display: 'block', fontSize: '0.8rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Logistics Mode</span>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a' }}>{order.deliveryAgentName || "Self Pickup"}</span>
+                        </div>
+                      </div>
+
+                      {/* Agent Coordinate Bar */}
+                      {hasAgent && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed #e2e8f0', paddingTop: '1.25rem', marginTop: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{ width: '40px', height: '40px', background: '#eff6ff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Truck size={20} color="#2563eb" />
+                            </div>
+                            <div>
+                              <span style={{ display: 'block', fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Assigned Agent</span>
+                              <strong style={{ color: '#0f172a', fontSize: '0.9rem' }}>{order.deliveryAgentName}</strong>
+                            </div>
+                          </div>
+
+                          {hasValidPhone ? (
+                            <a 
+                              href={"tel:" + order.deliveryAgentMobile} 
+                              style={{ 
+                                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
+                                padding: '0.6rem 1.25rem', borderRadius: '12px', 
+                                background: '#10b981', color: '#fff', fontWeight: 800, 
+                                fontSize: '0.85rem', textDecoration: 'none', transition: 'all 0.2s ease',
+                                boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.2)'
+                              }}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = '#059669'; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = '#10b981'; }}
+                            >
+                              <Phone size={16} fill="#fff" /> Call Agent
+                            </a>
+                          ) : (
+                            <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic' }}>No phone contact</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
          {activeTab === "bargains" && (
            <div className="animate-fade-in">
@@ -504,64 +593,6 @@ export default function FarmerDashboard() {
                   ))}
                 </div>
               )}
-           </div>
-         )}
-
-         {activeTab === "orders" && (
-           <div className="animate-fade-in">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Order Management & Logistics</h2>
-              </div>
-              
-              {(() => {
-                const visibleOrders = orders.filter((order) => {
-                  if (!order.deliveryAgentName || order.deliveryAgentName === "Self Pickup") return true;
-                  return order.delivery?.status === "ACCEPTED" || order.delivery?.status === "SHIPPED" || order.delivery?.status === "DELIVERED";
-                });
-                if (visibleOrders.length === 0) {
-                  return (
-                    <div className={styles.card} style={{ textAlign: 'center', padding: '4rem' }}>
-                      <ShoppingCart size={48} color="#cbd5e1" style={{ margin: '0 auto 1rem' }} />
-                      <h3 style={{ color: '#64748b', fontWeight: 700 }}>No active orders yet</h3>
-                      <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: '0.5rem 0 0 0' }}>Orders waiting for logistics acceptance will appear here once accepted.</p>
-                    </div>
-                  );
-                }
-                return (
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    {visibleOrders.map((order, i) => (
-                      <div key={i} className={styles.card} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid #2563eb' }}>
-                        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                           <div style={{ width: '48px', height: '48px', background: '#eff6ff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                             <Truck size={24} color="#2563eb" />
-                           </div>
-                           <div>
-                             <h3 style={{ margin: '0 0 0.25rem 0', fontWeight: 800 }}>Order #{order.id.substring(0,8).toUpperCase()}</h3>
-                             <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.9rem', color: '#0f172a', fontWeight: 600 }}>
-                                {order.negotiation ? `${order.negotiation.offeredQuantity}x ${order.negotiation.product?.name}` : (order.items || []).map((item: any) => `${item.quantity}x ${item.product?.name}`).join(", ") || "No items"}
-                             </p>
-                             <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>Status: <strong style={{ color: '#0f172a' }}>{order.status}</strong></p>
-                             <p style={{ margin: '0.25rem 0 0 0', color: '#64748b', fontSize: '0.9rem' }}>Buyer: <strong style={{ color: '#0f172a' }}>{order.user?.name || "Shop Owner"}</strong></p>
-                           </div>
-                        </div>
-                        
-                        <div style={{ textAlign: 'right' }}>
-                          <h3 style={{ margin: '0 0 0.25rem 0', fontWeight: 800, color: '#10b981', fontSize: '1.5rem' }}>₹{order.totalAmount}</h3>
-                          <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}><span style={{ fontWeight: 600 }}>Logistics:</span> {order.deliveryAgentName || "Self Pickup"}</p>
-                          {order.deliveryAgentMobile !== "N/A" && (
-                            <p style={{ margin: '0.25rem 0 0 0', color: '#64748b', fontSize: '0.85rem' }}>Agent Mobile: {order.deliveryAgentMobile}</p>
-                          )}
-                          {order.deliveryDate && (
-                            <div style={{ display: 'inline-block', marginTop: '0.5rem', padding: '0.25rem 0.75rem', background: '#fffbeb', color: '#d97706', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 800 }}>
-                              Pickup: {new Date(order.deliveryDate).toLocaleDateString()}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
            </div>
          )}
 
