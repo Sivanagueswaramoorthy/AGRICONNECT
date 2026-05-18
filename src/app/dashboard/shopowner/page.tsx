@@ -325,7 +325,7 @@ export default function ShopOwnerDashboard() {
 
         {activeTab === "marketplace" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Marketplace</h2>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <select className={styles.formInput} style={{ width: 'auto', padding: '0.5rem 1rem' }} value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
@@ -369,7 +369,7 @@ export default function ShopOwnerDashboard() {
 
         {activeTab === "subscriptions" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>My Subscriptions</h2>
                 <button className={styles.primaryBtn} style={{ width: 'auto', padding: '0.5rem 1.5rem' }} onClick={() => setActiveTab("marketplace")}><Plus size={20} /> New Subscription</button>
              </div>
@@ -381,7 +381,7 @@ export default function ShopOwnerDashboard() {
                  <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '400px', margin: '0.5rem auto 1.5rem' }}>Set up recurring deliveries for daily milk, weekly vegetables, or monthly staples.</p>
                </div>
              ) : (
-               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
                  {subscriptions.map((sub, i) => (
                    <div key={i} className={styles.card} style={{ borderLeft: '4px solid #2563eb' }}>
                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
@@ -425,7 +425,7 @@ export default function ShopOwnerDashboard() {
 
          {activeTab === "bargains" && (
            <div className="animate-fade-in">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Active Bargains</h2>
               </div>
               
@@ -478,7 +478,7 @@ export default function ShopOwnerDashboard() {
 
         {activeTab === "delivery_partners" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Logistics & Agents</h2>
                {assigningDeliveryFor && (
                  <span style={{ padding: '0.75rem 1.5rem', background: '#eff6ff', color: '#2563eb', borderRadius: '12px', fontWeight: 700 }}>Selecting Agent for Pending Deal</span>
@@ -569,7 +569,7 @@ export default function ShopOwnerDashboard() {
 
         {activeTab === "orders" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>My Orders</h2>
              </div>
 
@@ -673,12 +673,12 @@ export default function ShopOwnerDashboard() {
 
         {activeTab === "profile" && (
           <div className="animate-fade-in">
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>My Profile</h2>
              </div>
              
              <div className={styles.card} style={{ maxWidth: '800px' }}>
-               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '2rem' }}>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '2rem', flexWrap: 'wrap' }}>
                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800, color: '#2563eb' }}>
                    {session?.user?.name?.[0] || 'B'}
                  </div>
@@ -688,7 +688,7 @@ export default function ShopOwnerDashboard() {
                  </div>
                </div>
 
-               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
                  <div>
                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem' }}>Email Address</label>
                    <div style={{ padding: '0.75rem 1.1rem', background: '#f8fafc', borderRadius: '14px', border: '1.5px solid #e2e8f0', fontWeight: 600 }}>{session?.user?.email || 'N/A'}</div>
