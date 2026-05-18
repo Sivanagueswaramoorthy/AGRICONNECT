@@ -240,7 +240,37 @@
 }
 
 @media (max-width: 480px) {
-  .card {
+  .container {
     padding: 1rem;
+  }
+  .card {
+    padding: 1.5rem 1.25rem;
+    max-width: 100%;
+  }
+  .logo {
+    width: 90px;
+    height: 90px;
+  }
+  .title {
+    font-size: 2.2rem;
+  }
+  .subtitle {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .input, .select {
+    padding: 0.9rem 1.25rem 0.9rem 3.25rem;
+    font-size: 0.9rem;
+  }
+  .fieldIcon {
+    left: 1.25rem;
+  }
+  .signInBtn {
+    padding: 0.9rem;
+    font-size: 0.95rem;
+  }
+  .signupText {
+    margin-top: 2rem;
+    font-size: 0.85rem;
   }
 }

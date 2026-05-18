@@ -106,3 +106,67 @@ a {
   70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
   100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
+
+/* Premium Mobile-First Layout Tuning & Size Reductions */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 14px;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+
+  /* Compact headings on mobile to keep structure elegant */
+  h1 {
+    font-size: 1.85rem !important;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-size: 1.5rem !important;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.25rem !important;
+  }
+  h4 {
+    font-size: 1.1rem !important;
+  }
+
+  /* Compact paddings and margins for mobile comfort */
+  .mainContent, [class*="mainContent"], [class*="main"] {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .card, [class*="card"], .glass-panel {
+    padding: 1.25rem 1rem !important;
+    border-radius: 16px !important;
+  }
+
+  /* Grid layouts scale cleanly to single columns */
+  .grid, [class*="grid"], [class*="Grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  /* Form spacing reductions */
+  input, select, textarea, button, [class*="input"], [class*="Btn"] {
+    padding: 0.85rem 1.1rem !important;
+    font-size: 0.925rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Navigation adjustments for horizontal scrolling on mobile */
+  [class*="navMenu"], [class*="navLinks"] {
+    gap: 0.5rem !important;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.25rem 0 !important;
+  }
+
+  [class*="navItem"], [class*="navLink"] {
+    padding: 0.65rem 1rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 10px !important;
+  }
+}
