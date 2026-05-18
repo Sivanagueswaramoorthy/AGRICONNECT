@@ -514,23 +514,52 @@ export default function ShopOwnerDashboard() {
                   };
 
                   return (
-                    <div key={i} className={styles.productCard} style={{ padding: '2rem', borderTop: '4px solid #10b981' }}>
-                      <div style={{ width: '64px', height: '64px', background: '#ecfdf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                        <Truck size={32} color="#10b981" />
+                    <div key={i} className={styles.productCard} style={{ padding: '2rem', borderTop: '4px solid #10b981', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '380px' }}>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                          <div style={{ width: '56px', height: '56px', background: '#ecfdf5', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Truck size={28} color="#10b981" />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: '#fffbeb', padding: '0.4rem 0.8rem', borderRadius: '20px', color: '#f59e0b', fontWeight: 800, fontSize: '0.85rem' }}>
+                            <Star size={16} fill="#f59e0b" color="#f59e0b" /> {displayAgent.rating}
+                          </div>
+                        </div>
+
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '0 0 0.75rem 0', color: '#0f172a' }}>{displayAgent.name}</h3>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                          <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 600, color: '#475569' }}>Fleet:</span> {displayAgent.vehicles}
+                          </p>
+                          <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 600, color: '#475569' }}>Phone:</span> {displayAgent.mobile}
+                          </p>
+                        </div>
                       </div>
-                      <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>{displayAgent.name}</h3>
-                      <p style={{ margin: '0 0 0.25rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Phone:</span> {displayAgent.mobile}</p>
-                      <p style={{ margin: '0 0 1rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Fleet:</span> {displayAgent.vehicles}</p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: '#f59e0b', fontWeight: 700 }}>
-                        <Star size={18} fill="#f59e0b" /> {displayAgent.rating} / 5.0
+
+                      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
+                        <button 
+                          onClick={() => assigningDeliveryFor ? setShowDatePickerModal(displayAgent) : setToast({ text: "Please start an assignment from the Bargains tab first.", type: "error" })} 
+                          className={styles.primaryBtn} 
+                          style={{ flex: 1, padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 700 }}
+                        >
+                          <Check size={18} /> {assigningDeliveryFor ? "Select Partner" : "View Fleet"}
+                        </button>
+                        <a 
+                          href={"tel:" + displayAgent.mobile} 
+                          style={{ 
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                            width: '46px', height: '46px', borderRadius: '12px', 
+                            background: '#eff6ff', border: '1px solid #bfdbfe', color: '#2563eb', 
+                            transition: 'all 0.2s ease', textDecoration: 'none'
+                          }}
+                          title="Call Delivery Partner"
+                          onMouseEnter={(e) => { e.currentTarget.style.background = '#dbeafe'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = '#eff6ff'; }}
+                        >
+                          <Phone size={20} fill="#2563eb" />
+                        </a>
                       </div>
-                      <button 
-                        onClick={() => assigningDeliveryFor ? setShowDatePickerModal(displayAgent) : setToast({ text: "Please start an assignment from the Bargains tab first.", type: "error" })} 
-                        className={styles.primaryBtn} 
-                        style={{ width: '100%' }}
-                      >
-                        {assigningDeliveryFor ? "Select Agent" : "View Details"}
-                      </button>
                     </div>
                   );
                 })}

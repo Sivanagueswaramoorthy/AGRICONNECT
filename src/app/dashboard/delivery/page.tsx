@@ -38,27 +38,20 @@ export default function DeliveryDashboard() {
   });
   const [isEditingVehicle, setIsEditingVehicle] = useState(false);
 
-  // Editable Logistics Performance State
-  const [performance, setPerformance] = useState({
-    completed: 18,
-    pending: 5,
-    successRate: "97.8%",
-    totalDistance: "126 km",
-    onTimeScore: "4.9/5",
-    avgDeliveryTime: "22 mins",
-    customerSatisfaction: "98%",
-    routeEfficiency: "High",
-    isAvailable: true,
-    currentHub: "Chennai Central Zone",
-    shift: "8:00 AM – 6:00 PM"
-  });
-  const [isEditingPerformance, setIsEditingPerformance] = useState(false);
-
   // Session
   const { data: session } = useSession();
-  const driverName = session?.user?.name || "Rajan Kumar";
-  const driverEmail = session?.user?.email || "del1@agri.com";
   const agentId = (session?.user as any)?.id || "del1";
+
+  // Editable Driver Profile State (Name, Email, Mobile, etc.)
+  const [profile, setProfile] = useState({
+    name: session?.user?.name || "Rajan Kumar",
+    email: session?.user?.email || "del1@agri.com",
+    mobile: "+91 9876543210",
+    shift: "8:00 AM – 6:00 PM",
+    hub: "Chennai Central Zone",
+    isAvailable: true
+  });
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const handleDeleteAccount = async () => {
     if (!session?.user?.email) return;
@@ -233,9 +226,9 @@ export default function DeliveryDashboard() {
           </div>
           
           <div className={styles.profileBadge}>
-            <div className={styles.avatar}>{driverName.substring(0, 2).toUpperCase()}</div>
+            <div className={styles.avatar}>{profile.name.substring(0, 2).toUpperCase()}</div>
             <div>
-              <h4 style={{ margin: 0 }}>{driverName}</h4>
+              <h4 style={{ margin: 0 }}>{profile.name}</h4>
               <p style={{ margin: 0, fontSize: '0.8rem', color: '#f59e0b', fontWeight: 800 }}>Route Specialist</p>
             </div>
           </div>
@@ -506,193 +499,117 @@ export default function DeliveryDashboard() {
         {activeTab === "vehicle" && (
           <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             
-            {/* LOGISTICS PERFORMANCE CENTER */}
+            {/* DRIVER PERSONAL DETAILS & PROFILE */}
             <div className={styles.routeCard} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', height: 'fit-content' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>Logistics Performance Center</h3>
-                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: '#64748b' }}>Real-time driver operational analytics and tracking.</p>
+                  <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>Driver Profile & Credentials</h3>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: '#64748b' }}>Manage your personal credentials, contact info, and status.</p>
                 </div>
                 <button 
-                  onClick={() => setIsEditingPerformance(!isEditingPerformance)}
+                  onClick={() => setIsEditingProfile(!isEditingProfile)}
                   style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 800, whiteSpace: 'nowrap' }}
                 >
-                  {isEditingPerformance ? (
+                  {isEditingProfile ? (
                     <><Save size={18} /> Done</>
                   ) : (
-                    <><Edit size={18} /> Update Metrics</>
+                    <><Edit size={18} /> Update Details</>
                   )}
                 </button>
               </div>
 
-              {isEditingPerformance ? (
+              {isEditingProfile ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Deliveries Completed</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Full Name</label>
                     <input 
-                      type="number" value={performance.completed} 
-                      onChange={(e) => setPerformance({ ...performance, completed: parseInt(e.target.value) || 0 })}
+                      type="text" value={profile.name} 
+                      onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                       style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Pending Deliveries</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Email ID</label>
                     <input 
-                      type="number" value={performance.pending} 
-                      onChange={(e) => setPerformance({ ...performance, pending: parseInt(e.target.value) || 0 })}
+                      type="email" value={profile.email} 
+                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                       style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Success Rate</label>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Phone Number</label>
                     <input 
-                      type="text" value={performance.successRate} 
-                      onChange={(e) => setPerformance({ ...performance, successRate: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Total Distance Today</label>
-                    <input 
-                      type="text" value={performance.totalDistance} 
-                      onChange={(e) => setPerformance({ ...performance, totalDistance: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>On-Time Score</label>
-                    <input 
-                      type="text" value={performance.onTimeScore} 
-                      onChange={(e) => setPerformance({ ...performance, onTimeScore: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Avg Delivery Time</label>
-                    <input 
-                      type="text" value={performance.avgDeliveryTime} 
-                      onChange={(e) => setPerformance({ ...performance, avgDeliveryTime: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Customer Satisfaction</label>
-                    <input 
-                      type="text" value={performance.customerSatisfaction} 
-                      onChange={(e) => setPerformance({ ...performance, customerSatisfaction: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Route Efficiency</label>
-                    <input 
-                      type="text" value={performance.routeEfficiency} 
-                      onChange={(e) => setPerformance({ ...performance, routeEfficiency: e.target.value })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Availability</label>
-                    <select 
-                      value={performance.isAvailable ? "yes" : "no"} 
-                      onChange={(e) => setPerformance({ ...performance, isAvailable: e.target.value === "yes" })}
-                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-                    >
-                      <option value="yes">Available for Orders</option>
-                      <option value="no">Offline / Busy</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Current Hub</label>
-                    <input 
-                      type="text" value={performance.currentHub} 
-                      onChange={(e) => setPerformance({ ...performance, currentHub: e.target.value })}
+                      type="text" value={profile.mobile} 
+                      onChange={(e) => setProfile({ ...profile, mobile: e.target.value })}
                       style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
                     />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Shift Hours</label>
                     <input 
-                      type="text" value={performance.shift} 
-                      onChange={(e) => setPerformance({ ...performance, shift: e.target.value })}
+                      type="text" value={profile.shift} 
+                      onChange={(e) => setProfile({ ...profile, shift: e.target.value })}
                       style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
                     />
                   </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Current Hub</label>
+                    <input 
+                      type="text" value={profile.hub} 
+                      onChange={(e) => setProfile({ ...profile, hub: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Duty Availability</label>
+                    <select 
+                      value={profile.isAvailable ? "yes" : "no"} 
+                      onChange={(e) => setProfile({ ...profile, isAvailable: e.target.value === "yes" })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    >
+                      <option value="yes">🟢 Active / Available for Orders</option>
+                      <option value="no">🔴 Offline / Duty End</option>
+                    </select>
+                  </div>
                 </div>
               ) : (
-                <>
-                  {/* Today's Delivery Summary */}
-                  <div>
-                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Today's Delivery Summary</h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Deliveries Completed</p>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{pastDeliveries.length ? pastDeliveries.length : performance.completed}</p>
-                      </div>
-                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Pending Deliveries</p>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>{assignments.length ? (assignments.length - pastDeliveries.length) : performance.pending}</p>
-                      </div>
-                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Success Rate</p>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#2563eb' }}>{assignments.length ? successRateValue : performance.successRate}</p>
-                      </div>
-                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Total Distance Today</p>
-                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#0f172a' }}>{pastDeliveries.length ? totalDistanceValue : performance.totalDistance}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {/* Photo Profile Badge Display */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '24px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ width: '80px', height: '80px', background: '#2563eb', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800 }}>
+                      {profile.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0f172a' }}>{profile.name}</h4>
+                      <p style={{ margin: '0.25rem 0 0 0', color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>ID: {agentId}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <span style={{ fontSize: '0.8rem', padding: '0.25rem 0.75rem', background: profile.isAvailable ? '#ecfdf5' : '#fef2f2', color: profile.isAvailable ? '#10b981' : '#ef4444', borderRadius: '20px', fontWeight: 800 }}>
+                          {profile.isAvailable ? "🟢 Available" : "🔴 Offline"}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Performance Metrics */}
-                  <div>
-                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Performance Metrics</h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                        <span style={{ color: '#64748b', fontWeight: 600 }}>On-Time Delivery Score</span>
-                        <strong style={{ color: '#0f172a' }}>{performance.onTimeScore}</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                        <span style={{ color: '#64748b', fontWeight: 600 }}>Average Delivery Time</span>
-                        <strong style={{ color: '#0f172a' }}>{performance.avgDeliveryTime}</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                        <span style={{ color: '#64748b', fontWeight: 600 }}>Customer Satisfaction</span>
-                        <strong style={{ color: '#10b981' }}>{performance.customerSatisfaction}</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                        <span style={{ color: '#64748b', fontWeight: 600 }}>Route Efficiency</span>
-                        <strong style={{ color: '#2563eb' }}>{performance.routeEfficiency}</strong>
-                      </div>
+                  {/* Personal details list */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderTop: '1px solid #f1f5f9', paddingTop: '1.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: 600 }}>Email Address</span>
+                      <strong style={{ color: '#0f172a' }}>{profile.email}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: 600 }}>Phone Number</span>
+                      <strong style={{ color: '#0f172a' }}>{profile.mobile}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: 600 }}>Active Shift</span>
+                      <strong style={{ color: '#0f172a' }}>{profile.shift}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#64748b', fontWeight: 600 }}>Assigned Hub</span>
+                      <strong style={{ color: '#2563eb' }}>{profile.hub}</strong>
                     </div>
                   </div>
-
-                  {/* Live Status */}
-                  <div>
-                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Live Status</h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                        <span>{performance.isAvailable ? "🟢" : "🔴"}</span>
-                        <strong style={{ color: performance.isAvailable ? '#10b981' : '#ef4444' }}>{performance.isAvailable ? "Available for Orders" : "Offline / Busy"}</strong>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                        <span>📍</span>
-                        <span style={{ color: '#64748b' }}>Current Hub:</span>
-                        <strong style={{ color: '#0f172a' }}>{performance.currentHub}</strong>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                        <span>⏰</span>
-                        <span style={{ color: '#64748b' }}>Shift:</span>
-                        <strong style={{ color: '#0f172a' }}>{performance.shift}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Button */}
-                  <button onClick={handleViewAnalytics} className={styles.primaryBtn} style={{ padding: '0.75rem', width: '100%', justifyContent: 'center' }}>
-                    View Full Analytics →
-                  </button>
-                </>
+                </div>
               )}
 
               {/* Danger Zone */}
