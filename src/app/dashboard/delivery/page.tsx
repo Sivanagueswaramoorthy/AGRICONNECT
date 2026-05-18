@@ -38,6 +38,22 @@ export default function DeliveryDashboard() {
   });
   const [isEditingVehicle, setIsEditingVehicle] = useState(false);
 
+  // Editable Logistics Performance State
+  const [performance, setPerformance] = useState({
+    completed: 18,
+    pending: 5,
+    successRate: "97.8%",
+    totalDistance: "126 km",
+    onTimeScore: "4.9/5",
+    avgDeliveryTime: "22 mins",
+    customerSatisfaction: "98%",
+    routeEfficiency: "High",
+    isAvailable: true,
+    currentHub: "Chennai Central Zone",
+    shift: "8:00 AM – 6:00 PM"
+  });
+  const [isEditingPerformance, setIsEditingPerformance] = useState(false);
+
   // Session
   const { data: session } = useSession();
   const driverName = session?.user?.name || "Rajan Kumar";
@@ -492,82 +508,192 @@ export default function DeliveryDashboard() {
             
             {/* LOGISTICS PERFORMANCE CENTER */}
             <div className={styles.routeCard} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '2rem', height: 'fit-content' }}>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>Logistics Performance Center</h3>
-                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: '#64748b' }}>Real-time driver operational analytics and efficiency tracking.</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>Logistics Performance Center</h3>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.9rem', color: '#64748b' }}>Real-time driver operational analytics and tracking.</p>
+                </div>
+                <button 
+                  onClick={() => setIsEditingPerformance(!isEditingPerformance)}
+                  style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 800, whiteSpace: 'nowrap' }}
+                >
+                  {isEditingPerformance ? (
+                    <><Save size={18} /> Done</>
+                  ) : (
+                    <><Edit size={18} /> Update Metrics</>
+                  )}
+                </button>
               </div>
 
-              {/* Today's Delivery Summary */}
-              <div>
-                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Today's Delivery Summary</h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Deliveries Completed</p>
-                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{completedCount}</p>
+              {isEditingPerformance ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Deliveries Completed</label>
+                    <input 
+                      type="number" value={performance.completed} 
+                      onChange={(e) => setPerformance({ ...performance, completed: parseInt(e.target.value) || 0 })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
                   </div>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Pending Deliveries</p>
-                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>{pendingCount}</p>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Pending Deliveries</label>
+                    <input 
+                      type="number" value={performance.pending} 
+                      onChange={(e) => setPerformance({ ...performance, pending: parseInt(e.target.value) || 0 })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
                   </div>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Success Rate</p>
-                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#2563eb' }}>{successRateValue}</p>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Success Rate</label>
+                    <input 
+                      type="text" value={performance.successRate} 
+                      onChange={(e) => setPerformance({ ...performance, successRate: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
                   </div>
-                  <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Total Distance Today</p>
-                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#0f172a' }}>{totalDistanceValue}</p>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Total Distance Today</label>
+                    <input 
+                      type="text" value={performance.totalDistance} 
+                      onChange={(e) => setPerformance({ ...performance, totalDistance: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>On-Time Score</label>
+                    <input 
+                      type="text" value={performance.onTimeScore} 
+                      onChange={(e) => setPerformance({ ...performance, onTimeScore: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Avg Delivery Time</label>
+                    <input 
+                      type="text" value={performance.avgDeliveryTime} 
+                      onChange={(e) => setPerformance({ ...performance, avgDeliveryTime: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Customer Satisfaction</label>
+                    <input 
+                      type="text" value={performance.customerSatisfaction} 
+                      onChange={(e) => setPerformance({ ...performance, customerSatisfaction: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Route Efficiency</label>
+                    <input 
+                      type="text" value={performance.routeEfficiency} 
+                      onChange={(e) => setPerformance({ ...performance, routeEfficiency: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Availability</label>
+                    <select 
+                      value={performance.isAvailable ? "yes" : "no"} 
+                      onChange={(e) => setPerformance({ ...performance, isAvailable: e.target.value === "yes" })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    >
+                      <option value="yes">Available for Orders</option>
+                      <option value="no">Offline / Busy</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Current Hub</label>
+                    <input 
+                      type="text" value={performance.currentHub} 
+                      onChange={(e) => setPerformance({ ...performance, currentHub: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.85rem', color: '#64748b' }}>Shift Hours</label>
+                    <input 
+                      type="text" value={performance.shift} 
+                      onChange={(e) => setPerformance({ ...performance, shift: e.target.value })}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid #cbd5e1', fontWeight: 700 }}
+                    />
                   </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Today's Delivery Summary */}
+                  <div>
+                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Today's Delivery Summary</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Deliveries Completed</p>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{pastDeliveries.length ? pastDeliveries.length : performance.completed}</p>
+                      </div>
+                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Pending Deliveries</p>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>{assignments.length ? (assignments.length - pastDeliveries.length) : performance.pending}</p>
+                      </div>
+                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Success Rate</p>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#2563eb' }}>{assignments.length ? successRateValue : performance.successRate}</p>
+                      </div>
+                      <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                        <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Total Distance Today</p>
+                        <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: 800, color: '#0f172a' }}>{pastDeliveries.length ? totalDistanceValue : performance.totalDistance}</p>
+                      </div>
+                    </div>
+                  </div>
 
-              {/* Performance Metrics */}
-              <div>
-                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Performance Metrics</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>On-Time Delivery Score</span>
-                    <strong style={{ color: '#0f172a' }}>4.9/5</strong>
+                  {/* Performance Metrics */}
+                  <div>
+                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Performance Metrics</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 600 }}>On-Time Delivery Score</span>
+                        <strong style={{ color: '#0f172a' }}>{performance.onTimeScore}</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 600 }}>Average Delivery Time</span>
+                        <strong style={{ color: '#0f172a' }}>{performance.avgDeliveryTime}</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 600 }}>Customer Satisfaction</span>
+                        <strong style={{ color: '#10b981' }}>{performance.customerSatisfaction}</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                        <span style={{ color: '#64748b', fontWeight: 600 }}>Route Efficiency</span>
+                        <strong style={{ color: '#2563eb' }}>{performance.routeEfficiency}</strong>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Average Delivery Time</span>
-                    <strong style={{ color: '#0f172a' }}>22 mins</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Customer Satisfaction</span>
-                    <strong style={{ color: '#10b981' }}>98%</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Route Efficiency</span>
-                    <strong style={{ color: '#2563eb' }}>High</strong>
-                  </div>
-                </div>
-              </div>
 
-              {/* Live Status */}
-              <div>
-                <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Live Status</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <span>🟢</span>
-                    <strong style={{ color: '#10b981' }}>Available for Orders</strong>
+                  {/* Live Status */}
+                  <div>
+                    <h4 style={{ margin: '0 0 1rem 0', fontWeight: 800, fontSize: '1.1rem', color: '#1e293b', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.5rem' }}>Live Status</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                        <span>{performance.isAvailable ? "🟢" : "🔴"}</span>
+                        <strong style={{ color: performance.isAvailable ? '#10b981' : '#ef4444' }}>{performance.isAvailable ? "Available for Orders" : "Offline / Busy"}</strong>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                        <span>📍</span>
+                        <span style={{ color: '#64748b' }}>Current Hub:</span>
+                        <strong style={{ color: '#0f172a' }}>{performance.currentHub}</strong>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                        <span>⏰</span>
+                        <span style={{ color: '#64748b' }}>Shift:</span>
+                        <strong style={{ color: '#0f172a' }}>{performance.shift}</strong>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <span>📍</span>
-                    <span style={{ color: '#64748b' }}>Current Hub:</span>
-                    <strong style={{ color: '#0f172a' }}>Chennai Central Zone</strong>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <span>⏰</span>
-                    <span style={{ color: '#64748b' }}>Shift:</span>
-                    <strong style={{ color: '#0f172a' }}>8:00 AM – 6:00 PM</strong>
-                  </div>
-                </div>
-              </div>
 
-              {/* Button */}
-              <button onClick={handleViewAnalytics} className={styles.primaryBtn} style={{ padding: '0.75rem', width: '100%', justifyContent: 'center' }}>
-                View Full Analytics →
-              </button>
+                  {/* Button */}
+                  <button onClick={handleViewAnalytics} className={styles.primaryBtn} style={{ padding: '0.75rem', width: '100%', justifyContent: 'center' }}>
+                    View Full Analytics →
+                  </button>
+                </>
+              )}
 
               {/* Danger Zone */}
               <div style={{ borderTop: '1px solid #fee2e2', paddingTop: '1.5rem', marginTop: '1rem' }}>
