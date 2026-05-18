@@ -106,3 +106,20 @@ export async function updateDeliveryStatus(deliveryId: string, status: string) {
     return { success: false };
   }
 }
+
+export async function getRegisteredDeliveryPartners() {
+  try {
+    return await prisma.user.findMany({
+      where: { role: "DELIVERY" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true
+      }
+    });
+  } catch (error) {
+    console.error("Get Registered Delivery Partners Error:", error);
+    return [];
+  }
+}

@@ -13,6 +13,7 @@ import { createNegotiation, getNegotiationsForBuyer, confirmCounterOffer, update
 import { getMarketplaceProducts, getShopOwnerOrders, getCart, addToCart, getWishlist, toggleWishlist, getSubscriptions, createSubscription } from "@/app/actions/shopActions";
 import { getShopOwnerStats } from "@/app/actions/statsActions";
 import { useSession, signOut } from "next-auth/react";
+import { getRegisteredDeliveryPartners } from "@/app/actions/deliveryActions";
 
 export default function ShopOwnerDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -21,6 +22,7 @@ export default function ShopOwnerDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [wishlist, setWishlist] = useState<any[]>([]);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [deliveryPartners, setDeliveryPartners] = useState<any[]>([]);
   const [assigningDeliveryFor, setAssigningDeliveryFor] = useState<string | null>(null);
   const [showDatePickerModal, setShowDatePickerModal] = useState<any>(null);
   const [pickupDate, setPickupDate] = useState<string>("");
@@ -51,14 +53,15 @@ export default function ShopOwnerDashboard() {
   async function loadData() {
     setLoading(true);
     try {
-      const [p, n, s, o, c, w, sub] = await Promise.all([
+      const [p, n, s, o, c, w, sub, dp] = await Promise.all([
         getMarketplaceProducts(),
         getNegotiationsForBuyer(shopId),
         getShopOwnerStats(shopId),
         getShopOwnerOrders(shopId),
         getCart(shopId),
         getWishlist(shopId),
-        getSubscriptions(shopId)
+        getSubscriptions(shopId),
+        getRegisteredDeliveryPartners()
       ]);
       setProducts(p);
       setNegotiations(n);
@@ -66,6 +69,7 @@ export default function ShopOwnerDashboard() {
       setOrders(o);
       setWishlist(w);
       setSubscriptions(sub);
+      setDeliveryPartners(dp);
     } catch (err) {
       console.error("Data Load Error:", err);
     } finally {
@@ -481,32 +485,56 @@ export default function ShopOwnerDashboard() {
                )}
              </div>
 
-             <div className={styles.productGrid}>
-               {[
-                 { id: "del1", name: "AgriLogistics Pro", mobile: "+91 9876543210", vehicles: "Temp-Controlled Trucks", rating: 4.8 },
-                 { id: "del2", name: "FastMover Farmers", mobile: "+91 9998887776", vehicles: "Mini Trucks", rating: 4.5 },
-                 { id: "del3", name: "EcoTransport", mobile: "+91 8887776665", vehicles: "Electric Vans", rating: 4.9 }
-               ].map((agent, i) => (
-                 <div key={i} className={styles.productCard} style={{ padding: '2rem', borderTop: '4px solid #10b981' }}>
-                   <div style={{ width: '64px', height: '64px', background: '#ecfdf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                     <Truck size={32} color="#10b981" />
-                   </div>
-                   <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>{agent.name}</h3>
-                   <p style={{ margin: '0 0 0.25rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Phone:</span> {agent.mobile}</p>
-                   <p style={{ margin: '0 0 1rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Fleet:</span> {agent.vehicles}</p>
-                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: '#f59e0b', fontWeight: 700 }}>
-                     <Star size={18} fill="#f59e0b" /> {agent.rating} / 5.0
-                   </div>
-                   <button 
-                     onClick={() => assigningDeliveryFor ? setShowDatePickerModal(agent) : setToast({ text: "Please start an assignment from the Bargains tab first.", type: "error" })} 
-                     className={styles.primaryBtn} 
-                     style={{ width: '100%' }}
-                   >
-                     {assigningDeliveryFor ? "Select Agent" : "View Details"}
-                   </button>
-                 </div>
-               ))}
-             </div>
+                           <div className={styles.productGrid}>
+                {deliveryPartners.map((agent, i) => {
+                  let mobile = "+91 90000 00000";
+                  let fleet = "Standard Carrier";
+                  let rating = 4.7;
+
+                  if (agent.email === "del1@agri.com" || agent.id === "del1") {
+                    mobile = "+91 9876543210";
+                    fleet = "Temp-Controlled Trucks";
+                    rating = 4.8;
+                  } else if (agent.email === "del2@agri.com" || agent.id === "del2") {
+                    mobile = "+91 9998887776";
+                    fleet = "Mini Trucks";
+                    rating = 4.5;
+                  } else if (agent.name === "EcoTransport" || agent.email === "sivanague@gmail.com" || agent.id === "del3") {
+                    mobile = "+91 8887776665";
+                    fleet = "Electric Vans";
+                    rating = 4.9;
+                  }
+
+                  const displayAgent = {
+                    id: agent.id,
+                    name: agent.name || "Delivery Partner",
+                    mobile: mobile,
+                    vehicles: fleet,
+                    rating: rating
+                  };
+
+                  return (
+                    <div key={i} className={styles.productCard} style={{ padding: '2rem', borderTop: '4px solid #10b981' }}>
+                      <div style={{ width: '64px', height: '64px', background: '#ecfdf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                        <Truck size={32} color="#10b981" />
+                      </div>
+                      <h3 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0' }}>{displayAgent.name}</h3>
+                      <p style={{ margin: '0 0 0.25rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Phone:</span> {displayAgent.mobile}</p>
+                      <p style={{ margin: '0 0 1rem 0', color: '#64748b' }}><span style={{ fontWeight: 600 }}>Fleet:</span> {displayAgent.vehicles}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: '#f59e0b', fontWeight: 700 }}>
+                        <Star size={18} fill="#f59e0b" /> {displayAgent.rating} / 5.0
+                      </div>
+                      <button 
+                        onClick={() => assigningDeliveryFor ? setShowDatePickerModal(displayAgent) : setToast({ text: "Please start an assignment from the Bargains tab first.", type: "error" })} 
+                        className={styles.primaryBtn} 
+                        style={{ width: '100%' }}
+                      >
+                        {assigningDeliveryFor ? "Select Agent" : "View Details"}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
           </div>
         )}
 
