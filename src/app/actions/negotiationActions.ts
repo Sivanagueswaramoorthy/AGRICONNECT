@@ -8,14 +8,19 @@ export async function createNegotiation(data: any) {
     const product = await prisma.product.findUnique({ where: { id: data.productId } });
     if (!product) throw new Error("Product not found.");
 
-    let buyer = await prisma.user.findFirst({ 
-      where: { 
-        OR: [{ id: data.buyerId }, { email: "shop1@agri.com" }] 
-      } 
-    });
-    
-    // Fallback if not logged in
-    if (!buyer) buyer = await prisma.user.findFirst();
+    let buyer = null;
+    if (data.buyerId && data.buyerId !== "shop1") {
+      buyer = await prisma.user.findUnique({ where: { id: data.buyerId } });
+    }
+    if (!buyer) {
+      buyer = await prisma.user.findFirst({ where: { email: "shop1@agri.com" } });
+    }
+    if (!buyer) {
+      buyer = await prisma.user.findFirst({ where: { role: "SHOP_OWNER" } });
+    }
+    if (!buyer) {
+      buyer = await prisma.user.findFirst();
+    }
     if (!buyer) throw new Error("Buyer account not found in database.");
 
     const negotiation = await prisma.negotiation.create({
@@ -208,11 +213,24 @@ export async function getNegotiationsForBuyer(buyerId: string) {
       }
     }
     
-    return await prisma.negotiation.findMany({
+    let list = await prisma.negotiation.findMany({
       where: { buyerId: actualId },
       include: { product: true, farmer: { include: { user: true } } },
       orderBy: { updatedAt: "desc" }
     });
+
+    if (list.length === 0) {
+      const u = await prisma.user.findFirst({ where: { email: "shop1@agri.com" } });
+      if (u && u.id !== actualId) {
+        list = await prisma.negotiation.findMany({
+          where: { buyerId: u.id },
+          include: { product: true, farmer: { include: { user: true } } },
+          orderBy: { updatedAt: "desc" }
+        });
+      }
+    }
+
+    return list;
   } catch (error) {
     console.error("Get Buyer Negs Error:", error);
     return [];

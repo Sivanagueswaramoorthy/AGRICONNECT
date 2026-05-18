@@ -18,15 +18,15 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   accounts      Account[]
+  cartItems     CartItem[]
   deliveries    Delivery[]
   farmerProfile FarmerProfile?
   negotiations  Negotiation[]
   orders        Order[]
-  sessions      Session[]
   reviews       Review[]
-  wishlistItems WishlistItem[]
-  cartItems     CartItem[]
+  sessions      Session[]
   subscriptions Subscription[]
+  wishlistItems WishlistItem[]
 }
 
 model Account {
@@ -64,51 +64,51 @@ model VerificationToken {
 }
 
 model FarmerProfile {
-  id            String        @id @default(cuid())
-  userId        String        @unique
-  mobileNumber  String?
-  address       String?
-  farmLocation  String?
-  landArea      String?
-  farmingMethod String?
-  preferredLang String?
-  aadhaar       String?
-  bankDetails   String?
-  profilePhoto  String?
-  farmImage     String?
-  organicStatus Boolean       @default(false)
-  cropTypes     String[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  negotiations  Negotiation[]
-  products      Product[]
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  mobileNumber   String?
+  address        String?
+  farmLocation   String?
+  landArea       String?
+  farmingMethod  String?
+  preferredLang  String?
+  aadhaar        String?
+  bankDetails    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  cropTypes      String[]
+  farmImage      String?
+  organicStatus  Boolean          @default(false)
+  profilePhoto   String?
   cropMonitoring CropMonitoring[]
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  negotiations   Negotiation[]
+  products       Product[]
 }
 
 model Product {
-  id           String        @id @default(cuid())
-  farmerId     String
-  name         String
-  description  String?
-  category     String
-  quantity     Float
-  unit         String
-  price        Float
-  harvestDate  DateTime?
-  shelfLife    String?
-  isOrganic            Boolean       @default(false)
-  deliveryAvailability String        @default("BOTH")
+  id                   String         @id @default(cuid())
+  farmerId             String
+  name                 String
+  description          String?
+  category             String
+  quantity             Float
+  unit                 String
+  price                Float
+  harvestDate          DateTime?
+  shelfLife            String?
+  isOrganic            Boolean        @default(false)
   image                String?
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  negotiations Negotiation[]
-  orderItems   OrderItem[]
-  farmer       FarmerProfile @relation(fields: [farmerId], references: [id], onDelete: Cascade)
-  reviews      Review[]
-  wishlistItems WishlistItem[]
-  cartItems    CartItem[]
-  subscriptions Subscription[]
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  deliveryAvailability String         @default("BOTH")
+  cartItems            CartItem[]
+  negotiations         Negotiation[]
+  orderItems           OrderItem[]
+  farmer               FarmerProfile  @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  reviews              Review[]
+  subscriptions        Subscription[]
+  wishlistItems        WishlistItem[]
 }
 
 model Negotiation {
@@ -176,8 +176,8 @@ model Review {
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model WishlistItem {
@@ -185,8 +185,8 @@ model WishlistItem {
   userId    String
   productId String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -198,8 +198,8 @@ model CartItem {
   quantity  Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -208,14 +208,14 @@ model Subscription {
   id               String   @id @default(cuid())
   userId           String
   productId        String
-  frequency        String   // "DAILY", "WEEKLY", "MONTHLY"
-  status           String   @default("ACTIVE") // "ACTIVE", "PAUSED", "CANCELLED"
+  frequency        String
+  status           String   @default("ACTIVE")
   quantity         Float
   nextDeliveryDate DateTime
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CropMonitoring {
