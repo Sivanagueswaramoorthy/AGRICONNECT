@@ -75,6 +75,25 @@ export default function ShopOwnerDashboard() {
 
   useEffect(() => { loadData(); }, [activeTab]);
 
+  const handleDeleteAccount = async () => {
+    if (!session?.user?.email) return;
+    const confirmed = window.confirm(
+      "WARNING: Are you absolutely sure you want to permanently delete your account? This will wipe your profile, orders, bargains, and all historical records from the Agri database. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    const { deleteUserAccount } = await import("@/app/actions/userActions");
+    const res = await deleteUserAccount(session.user.email);
+    if (res.success) {
+      alert("Your account was successfully deleted. Redirecting to home...");
+      signOut({ callbackUrl: "/" });
+    } else {
+      alert("Error deleting account: " + res.error);
+      setLoading(false);
+    }
+  };
+
   const handleToggleWishlist = async (productId: string) => {
     setLoading(true);
     await toggleWishlist(shopId, productId);
@@ -585,12 +604,49 @@ export default function ShopOwnerDashboard() {
           </div>
         )}
 
-        {(activeTab === "wishlist" || activeTab === "farmers" || activeTab === "reviews" || activeTab === "profile") && (
+        {(activeTab === "wishlist" || activeTab === "farmers" || activeTab === "reviews") && (
           <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', textAlign: 'center' }}>
              <Activity size={64} color="#e2e8f0" style={{ marginBottom: '1.5rem' }} />
              <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a' }}>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Module</h2>
              <p style={{ color: '#64748b', fontSize: '1.1rem', maxWidth: '400px' }}>This robust feature is fully integrated with our new PostgreSQL schema and is currently rendering live UI components.</p>
              <button onClick={() => setActiveTab("dashboard")} className={styles.primaryBtn} style={{ width: 'auto', marginTop: '2rem', padding: '0.75rem 2rem' }}>Back to Dashboard</button>
+          </div>
+        )}
+
+        {activeTab === "profile" && (
+          <div className="animate-fade-in">
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+               <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>My Profile</h2>
+             </div>
+             
+             <div className={styles.card} style={{ maxWidth: '800px' }}>
+               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '2rem' }}>
+                 <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800, color: '#2563eb' }}>
+                   {session?.user?.name?.[0] || 'B'}
+                 </div>
+                 <div>
+                   <h3 style={{ margin: '0 0 0.5rem 0', fontWeight: 800, fontSize: '1.5rem' }}>{session?.user?.name || 'Buyer Enterprise'}</h3>
+                   <span style={{ padding: '4px 12px', background: '#ecfdf5', color: '#10b981', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 800 }}>Shop Owner Portal</span>
+                 </div>
+               </div>
+
+               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                 <div>
+                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem' }}>Email Address</label>
+                   <div style={{ padding: '0.75rem 1.1rem', background: '#f8fafc', borderRadius: '14px', border: '1.5px solid #e2e8f0', fontWeight: 600 }}>{session?.user?.email || 'N/A'}</div>
+                 </div>
+                 <div>
+                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem' }}>Account Role</label>
+                   <div style={{ padding: '0.75rem 1.1rem', background: '#f8fafc', borderRadius: '14px', border: '1.5px solid #e2e8f0', fontWeight: 600 }}>Shop Owner (Buyer)</div>
+                 </div>
+               </div>
+
+               <div style={{ borderTop: '1px solid #fee2e2', marginTop: '2rem', paddingTop: '2rem' }}>
+                 <h3 style={{ color: '#ef4444', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Danger Zone</h3>
+                 <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Once you delete your account, there is no going back. All procurement orders, negotiations, and cart items will be permanently wiped.</p>
+                 <button className={styles.secondaryBtn} onClick={handleDeleteAccount} style={{ background: '#fef2f2', color: '#ef4444', borderColor: '#fecaca', width: 'auto', padding: '0.75rem 2.5rem' }}>Delete Account</button>
+               </div>
+             </div>
           </div>
         )}
 

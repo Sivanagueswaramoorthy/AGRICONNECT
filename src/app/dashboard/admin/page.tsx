@@ -9,7 +9,7 @@ import {
   AlertTriangle, RefreshCw, XCircle, UserCheck, Shield, Menu, X
 } from "lucide-react";
 import styles from "./page.module.css";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { 
   getAdminMetrics, 
   deleteProductAdmin, 
@@ -18,6 +18,27 @@ import {
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { data: session } = useSession();
+
+  const handleDeleteAccount = async () => {
+    const identifier = session?.user?.email || session?.user?.name || "admin";
+    const confirmed = window.confirm(
+      "WARNING: Are you absolutely sure you want to permanently delete your admin account? This will wipe your profile, system settings, and all administrative controls. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    const { deleteUserAccount } = await import("@/app/actions/userActions");
+    const res = await deleteUserAccount(identifier);
+    if (res.success) {
+      alert("Your admin account was successfully deleted. Redirecting to home...");
+      signOut({ callbackUrl: "/" });
+    } else {
+      alert("Error deleting account: " + res.error);
+      setLoading(false);
+    }
+  };
+
   const [metrics, setMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ text: string; type: "success" | "error" } | null>(null);
@@ -830,6 +851,12 @@ export default function AdminDashboard() {
             >
               Save Operational System Configuration
             </button>
+
+            <div style={{ borderTop: '1px solid #fee2e2', marginTop: '1.5rem', paddingTop: '1.5rem' }}>
+              <h3 style={{ color: '#ef4444', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Danger Zone</h3>
+              <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Once you delete your administrator account, you will lose all operations oversight, platform moderation privileges, and system registries control.</p>
+              <button onClick={handleDeleteAccount} style={{ background: '#fef2f2', color: '#ef4444', border: '1.5px solid #fecaca', borderRadius: '12px', padding: '0.75rem 2rem', cursor: 'pointer', fontWeight: 800, fontSize: '0.9rem' }}>Delete Admin Account</button>
+            </div>
           </div>
         )}
       </main>

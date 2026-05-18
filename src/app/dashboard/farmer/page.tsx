@@ -108,6 +108,25 @@ export default function FarmerDashboard() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const handleDeleteAccount = async () => {
+    if (!session?.user?.email) return;
+    const confirmed = window.confirm(
+      "WARNING: Are you absolutely sure you want to permanently delete your account? This will wipe your profile, listings, logs, and all historical records from the Agri database. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    const { deleteUserAccount } = await import("@/app/actions/userActions");
+    const res = await deleteUserAccount(session.user.email);
+    if (res.success) {
+      alert("Your account was successfully deleted. Redirecting to home...");
+      signOut({ callbackUrl: "/" });
+    } else {
+      alert("Error deleting account: " + res.error);
+      setLoading(false);
+    }
+  };
+
   const handleAddProduct = async () => {
     setLoading(true);
     if (editingProduct) {
@@ -382,6 +401,12 @@ export default function FarmerDashboard() {
 
                  <div className={styles.formGroup}><label>Aadhaar Verification Number</label><input type="text" className={styles.formInput} value={profileData.aadhaar} onChange={(e) => setProfileData({...profileData, aadhaar: e.target.value})} /></div>
                  <div className={styles.formGroup}><label>Bank Details (UPI / Acc No)</label><input type="text" className={styles.formInput} value={profileData.bankDetails} onChange={(e) => setProfileData({...profileData, bankDetails: e.target.value})} /></div>
+               
+                 <div style={{ borderTop: '1px solid #fee2e2', marginTop: '2.5rem', paddingTop: '2rem' }}>
+                  <h3 style={{ color: '#ef4444', fontWeight: 800, margin: '0 0 0.5rem 0' }}>Danger Zone</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Once you delete your account, there is no going back. All listings, bargaining loops, and history will be permanently wiped.</p>
+                  <button className={styles.secondaryBtn} onClick={handleDeleteAccount} style={{ background: '#fef2f2', color: '#ef4444', borderColor: '#fecaca', width: 'auto', padding: '0.75rem 2.5rem' }}>Delete Account</button>
+                </div>
                </div>
              </div>
           </div>

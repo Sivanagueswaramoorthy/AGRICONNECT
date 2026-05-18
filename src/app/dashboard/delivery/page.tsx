@@ -42,6 +42,25 @@ export default function DeliveryDashboard() {
   const driverEmail = session?.user?.email || "del1@agri.com";
   const agentId = (session?.user as any)?.id || "del1";
 
+  const handleDeleteAccount = async () => {
+    if (!session?.user?.email) return;
+    const confirmed = window.confirm(
+      "WARNING: Are you absolutely sure you want to permanently delete your account? This will wipe your profile, active cargo assignments, and all historical records from the Agri database. This cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    const { deleteUserAccount } = await import("@/app/actions/userActions");
+    const res = await deleteUserAccount(session.user.email);
+    if (res.success) {
+      alert("Your account was successfully deleted. Redirecting to home...");
+      signOut({ callbackUrl: "/" });
+    } else {
+      alert("Error deleting account: " + res.error);
+      setLoading(false);
+    }
+  };
+
   async function loadData() {
     setLoading(true);
     try {
@@ -489,6 +508,12 @@ export default function DeliveryDashboard() {
                     <Shield size={16} /> Background Verified
                   </span>
                 </div>
+              </div>
+
+              <div style={{ borderTop: '1px solid #fee2e2', marginTop: '1.5rem', paddingTop: '1.5rem' }}>
+                <h4 style={{ color: '#ef4444', fontWeight: 800, margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>Danger Zone</h4>
+                <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1rem', lineHeight: '1.4' }}>Once you delete your account, you will be permanently removed from all pending deliveries and route dispatch assignments.</p>
+                <button className={styles.secondaryBtn} onClick={handleDeleteAccount} style={{ background: '#fef2f2', color: '#ef4444', borderColor: '#fecaca', width: 'auto', padding: '0.6rem 1.5rem', fontSize: '0.85rem', fontWeight: 700 }}>Delete Account</button>
               </div>
             </div>
 
