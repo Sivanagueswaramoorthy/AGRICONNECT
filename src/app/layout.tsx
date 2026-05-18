@@ -5,6 +5,12 @@ import Providers from "@/components/Providers";
 export const metadata: Metadata = {
   title: "AgriConnect | Direct Farm to Table",
   description: "A unified platform connecting farmers, buyers, and delivery partners with AI-powered insights.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "AgriConnect",
+  },
 };
 
 export default function RootLayout({
